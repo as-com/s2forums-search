@@ -6,7 +6,7 @@ var fs = require("fs");
 var logger = log4js.getLogger();
 require("sugar");
 var client = new elasticsearch.Client({
-    host: 'localhost:9200',
+    host: 'elasticsearch:9200',
     log: 'info'
 });
 logger.setLevel('DEBUG');
@@ -140,7 +140,10 @@ function parsePost(response, body, id) {
 
 function grabPost(id) {
     fs.writeFile("currentID.json", id);
-    request.get("https://scratch.mit.edu/discuss/post/" + id + "/", function(
+    request.get({
+        uri: "https://scratch.mit.edu/discuss/post/" + id + "/",
+        timeout: 45000
+    }, function(
         error, response, body) {
         if (error) {
             logger.error("Error getting post: " + error);
