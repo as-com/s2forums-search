@@ -19,6 +19,10 @@ function parsePost(response, body, id) {
     // Super messy fragile parsing
     var $ = cheerio.load(body);
     var p = "#p" + id + " ";
+    if ($(p).length == 0) {
+        logger.warn("Server sent page, but post #" + id + " not found");
+        return;
+    }
     var time = Date.create($(p + ".box-head > a").text());
     logger.trace("Time: " + time);
     var author = $(p + "a.username").text();
