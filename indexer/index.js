@@ -27,11 +27,11 @@ function parsePost(response, body, id) {
     logger.trace("Time: " + time);
     var author = $(p + "a.username").text();
     logger.trace("Author: " + author);
-    var authorID = $(p + ".postavatar img").attr("src").split(
-        "/get_image/user/")[1].split("_")[0];
+    var authorID = parseInt($(p + ".postavatar img").attr("src").split(
+        "/get_image/user/")[1].split("_")[0]);
     logger.trace("Author ID: " + authorID);
-    var topicID = response.request.uri.href.split(
-        "/discuss/topic/")[1].split("/")[0];
+    var topicID = parseInt(response.request.uri.href.split(
+        "/discuss/topic/")[1].split("/")[0]);
     logger.trace("Topic ID: " + topicID);
     var topic = $(".linkst ul>li:last-child").contents(
         ":not(:empty)").first().text().substr(1).trim();
@@ -44,10 +44,7 @@ function parsePost(response, body, id) {
         logger.trace("Post last edited by: " + postEditAuthor);
         var postEditTime = Date.create($(p + ".posteditmessage")
             .text()
-            .split(
-                "Last edited by ")[1].split(" (")[1].split(
-                ")")[
-                0]);
+            .split("Last edited by ")[1].split(" (")[1].split(")")[0]);
         logger.trace("Post last edited on: " + postEditTime);
     } catch (e) {
         // post wasn't edited
@@ -113,7 +110,9 @@ function parsePost(response, body, id) {
                     body: {
                         author: author,
                         authorID: authorID,
-                        time: time.toString(),
+                        time: time.format(
+                            "{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"
+                        ),
                         topic: topic,
                         topicID: topicID,
                         revisions: [{
