@@ -74,10 +74,9 @@ function parsePost(response, body, id) {
         }, function(error, response) {
             if (response.found) {
                 // post already in index
-                if (postEditTime.toString() != response._source
-                    .revisions[
-                        response._source.revisions.length - 1].time
-                ) {
+                if (postEditTime.is(response._source.revisions[
+                        response._source.revisions.length -
+                        1].time)) {
                     // post updated
                     client.update({
                         index: "s2forums",
@@ -88,7 +87,9 @@ function parsePost(response, body, id) {
                             params: {
                                 rev: {
                                     author: postEditAuthor,
-                                    time: postEditTime.toString(),
+                                    time: postEditTime.format(
+                                        "{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"
+                                    ),
                                     text: postText,
                                     html: postHtml,
                                     source: postSource
@@ -117,7 +118,9 @@ function parsePost(response, body, id) {
                         topicID: topicID,
                         revisions: [{
                             author: postEditAuthor,
-                            time: postEditTime.toString(),
+                            time: postEditTime.format(
+                                "{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"
+                            ),
                             text: postText,
                             html: postHtml,
                             source: postSource
