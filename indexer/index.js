@@ -7,216 +7,223 @@ require("heapdump");
 var logger = log4js.getLogger();
 require("sugar");
 var client = new elasticsearch.Client({
-    host: 'elasticsearch:9200',
-    log: 'info'
+	host: 'elasticsearch:9200',
+	log: 'info'
 });
 logger.setLevel('DEBUG');
 var post = 1;
 
+function writeState(id) {
+	fs.readFile("currentID.json", function(err, data) {
+		if (err) {
+			logger.error("Failed to read state file: " + err);
+		} else {
+			logger.trace("Read state file, got " + data);
+			if (id > JSON.parse(data)) {
+				fs.writeFile("currentID.json", JSON.stringify(id), function(err, data) {
+					if (err) {
+						logger.error("Failed to write state file: " + err);
+					} else {
+						logger.trace("Wrote state file to " + id);
+					}
+				})
+			}
+		}
+	})
+}
+
 function parsePost(response, body, id) {
-    // console.log("Found post", id);
-    logger.debug("Parsing post #" + id);
-    // console.log("---------------------");
-    // Super messy fragile parsing
-    var $ = cheerio.load(body);
-    var p = "#p" + id + " ";
-    if ($(p).length == 0) {
-        logger.warn("Server sent page, but post #" + id + " not found");
-        return;
-    }
-    var time = Date.create($(p + ".box-head > a").text());
-    logger.trace("Time: " + time);
-    var author = $(p + "a.username").text();
-    logger.trace("Author: " + author);
-    var authorID = parseInt($(p + ".postavatar img").attr("src").split(
-        "/get_image/user/")[1].split("_")[0]);
-    logger.trace("Author ID: " + authorID);
-    var topicID = parseInt(response.request.uri.href.split(
-        "/discuss/topic/")[1].split("/")[0]);
-    logger.trace("Topic ID: " + topicID);
-    var topic = $(".linkst ul>li:last-child").contents(
-        ":not(:empty)").first().text().substr(1).trim();
-    logger.trace("Topic title: " + topic);
-    var postText = $(p + ".post_body_html").text();
-    var postHtml = $(p + ".post_body_html").html();
-    try {
-        var postEditAuthor = $(p + ".posteditmessage").text().split(
-            "Last edited by ")[1].split(" (")[0];
-        logger.trace("Post last edited by: " + postEditAuthor);
-        var postEditTime = Date.create($(p + ".posteditmessage")
-            .text()
-            .split("Last edited by ")[1].split(" (")[1].split(")")[0]);
-        logger.trace("Post last edited on: " + postEditTime);
-    } catch (e) {
-        // post wasn't edited
-        logger.trace("Post not edited.");
-        postEditAuthor = author;
-        postEditTime = time;
-    }
-    $ = null; // help free up some memory
-
-    // Get the BBCode source of the post
-    var postSource;
-    request("https://scratch.mit.edu/discuss/post/" + id + "/source/", function(
-        error, response, body) {
-        if (error) {
-            logger.error("Error getting BBCode: " + error);
-        } else {
-            postSource = body;
-            logger.trace("Successfully got BBCode");
-        }
-        // check if we already have it
-        client.get({
-            index: "s2forums",
-            type: "post",
-            id: id
-        }, function(error, response) {
-            if (response.found) {
-                // post already in index
-                if (postEditTime.is(response._source.revisions[
-                        response._source.revisions.length -
-                        1].time)) {
-                    // post updated
-                    client.update({
-                        index: "s2forums",
-                        type: "post",
-                        id: id,
-                        body: {
-                            script: "ctx._source.revisions.push(rev)",
-                            params: {
-                                rev: {
-                                    author: postEditAuthor,
-                                    time: postEditTime.format(
-                                        "{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"
-                                    ),
-                                    text: postText,
-                                    html: postHtml,
-                                    source: postSource
-                                }
-                            }
-                        }
-                    }, function() {
-                        logger.info("Updated post #" +
-                            id);
-                    });
-                } else {
-                    logger.info("Skipping post #" + id);
-                }
-            } else {
-                // index it
-                logger.debug("Indexing post #" + id);
-                client.create({
-                    index: "s2forums",
-                    type: "post",
-                    id: id,
-                    requestTimeout: 60000,
-                    body: {
-                        author: author,
-                        authorID: authorID,
-                        time: time.format(
-                            "{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"
-                        ),
-                        topic: topic,
-                        topicID: topicID,
-                        revisions: [{
-                            author: postEditAuthor,
-                            time: postEditTime.format(
-                                "{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"
-                            ),
-                            text: postText,
-                            html: postHtml,
-                            source: postSource
-                        }]
-                    }
-                }, function(error, response) {
-                    //console.log("Elasticsearch:", response);
-                    if (error) {
-                        logger.error(
-                            "Failed to put post #" +
-                            id + " in index"
-                        );
-                    } else {
-                        logger.info("Indexed post #" +
-                            id);
-                    }
-                });
-            }
-        });
-
-    });
-
+	// console.log("Found post", id);
+	logger.debug("Parsing post #" + id);
+	// console.log("---------------------");
+	// Super messy fragile parsing
+	var $ = cheerio.load(body);
+	var p = "#p" + id + " ";
+	if ($(p).length == 0) {
+		logger.warn("Server sent page, but post #" + id + " not found");
+		return;
+	}
+	var time = Date.create($(p + ".box-head > a").text());
+	logger.trace("Time: " + time);
+	var author = $(p + "a.username").text();
+	logger.trace("Author: " + author);
+	var authorID = parseInt($(p + ".postavatar img").attr("src").split("/get_image/user/")[1].split("_")[0]);
+	logger.trace("Author ID: " + authorID);
+	var topicID = parseInt(response.request.uri.href.split("/discuss/topic/")[1].split("/")[0]);
+	logger.trace("Topic ID: " + topicID);
+	var topic = $(".linkst ul>li:last-child").contents(":not(:empty)").first().text().substr(1).trim();
+	logger.trace("Topic title: " + topic);
+	var postText = $(p + ".post_body_html").text();
+	var postHtml = $(p + ".post_body_html").html();
+	try {
+		var postEditAuthor = $(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[0];
+		logger.trace("Post last edited by: " + postEditAuthor);
+		var postEditTime = Date.create($(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[1].split(")")[0]);
+		logger.trace("Post last edited on: " + postEditTime);
+	} catch (e) {
+		// post wasn't edited
+		logger.trace("Post not edited.");
+		postEditAuthor = author;
+		postEditTime = time;
+	}
+	$ = null; // help free up some memory, this actually fixed the massive memory leak
+	// Get the BBCode source of the post
+	var postSource;
+	request("https://scratch.mit.edu/discuss/post/" + id + "/source/", function(error, response, body) {
+		if (error) {
+			logger.error("Error getting BBCode: " + error);
+			logger.error("Trying again...");
+			setTimeout(function() {
+				grabPost(id);
+			}, 1000);
+		} else {
+			postSource = body;
+			logger.trace("Successfully got BBCode");
+			// check if we already have it
+			client.get({
+				index: "s2forums",
+				type: "post",
+				id: id
+			}, function(error, response) {
+				if (response.found) {
+					// post already in index
+					if (postEditTime.is(response._source.revisions[response._source.revisions.length - 1].time)) {
+						// post updated
+						client.update({
+							index: "s2forums",
+							type: "post",
+							id: id,
+							body: {
+								script: "ctx._source.revisions.push(rev)",
+								params: {
+									rev: {
+										author: postEditAuthor,
+										time: postEditTime.format("{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"),
+										text: postText,
+										html: postHtml,
+										source: postSource
+									}
+								}
+							}
+						}, function(error, response) {
+							if (error) {
+								logger.error("Failed to update post #" + id + ": " + error);
+								logger.error("Trying again...");
+								grabPost(id);
+							} else {
+								logger.info("Updated post #" + id);
+								writeState(id);
+							}
+						});
+					} else {
+						logger.info("Skipping post #" + id);
+						writeState(id);
+					}
+				} else {
+					// index it
+					logger.debug("Indexing post #" + id);
+					client.create({
+						index: "s2forums",
+						type: "post",
+						id: id,
+						requestTimeout: 60000,
+						body: {
+							author: author,
+							authorID: authorID,
+							time: time.format("{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"),
+							topic: topic,
+							topicID: topicID,
+							revisions: [{
+								author: postEditAuthor,
+								time: postEditTime.format("{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"),
+								text: postText,
+								html: postHtml,
+								source: postSource
+							}]
+						}
+					}, function(error, response) {
+						//console.log("Elasticsearch:", response);
+						if (error) {
+							logger.error("Failed to put post #" + id + " in index: " + error);
+							logger.error("Trying again...");
+							setTimeout(function() {
+								grabPost(id);
+							}, 1000);
+						} else {
+							logger.info("Indexed post #" + id);
+							writeState(id);
+						}
+					});
+				}
+			});
+		}
+	});
 }
 
 function grabPost(id) {
-    fs.writeFile("currentID.json", id);
-    request.get({
-        uri: "https://scratch.mit.edu/discuss/post/" + id + "/",
-        timeout: 45000
-    }, function(
-        error, response, body) {
-        if (error) {
-            logger.error("Error getting post: " + error);
-            logger.error("Trying again in a few seconds...");
-            setTimeout(function() {
-                grabPost(id);
-            }, 10000);
-        }
-        if (response.statusCode == 404) {
-            logger.info("404 for post #" + id);
-            // Workaround for early posts
-            if (id > 1673188) {
-                // Wait until post becomes available
-                logger.debug(
-                    "Waiting a few seconds for the post to become available..."
-                );
-                setTimeout(function() {
-                    grabPost(id);
-                }, 5000);
-            } else {
-                // Index next post
-                logger.debug("Moving on to next post...");
-                setTimeout(function() {
-                    grabPost(id + 1);
-                }, 300);
-            }
-        } else if (response.statusCode == 403) {
-            logger.info("Post #" + id + " deleted");
-            // Index next post
-            setTimeout(function() {
-                grabPost(id + 1);
-            }, 300);
-        } else if (response.statusCode == 200) {
-            parsePost(response, body, id);
-            // Index next post
-            setTimeout(function() {
-                grabPost(id + 1);
-            }, 300);
-        } else {
-            logger.error("Got unknown error code " + response.statusCode +
-                " for " + id);
-            // Wait until server is available
-            logger.error("Waiting 10 seconds...");
-            setTimeout(function() {
-                grabPost(id);
-            }, 10000);
-        }
-
-    });
+	// fs.writeFile("currentID.json", id);
+	request.get({
+		uri: "https://scratch.mit.edu/discuss/post/" + id + "/",
+		timeout: 45000
+	}, function(error, response, body) {
+		if (error) {
+			logger.error("Error getting post: " + error);
+			logger.error("Trying again in a few seconds...");
+			setTimeout(function() {
+				grabPost(id);
+			}, 10000);
+		}
+		if (response.statusCode == 404) {
+			logger.info("404 for post #" + id);
+			// Workaround for early posts
+			if (id > 1673188) {
+				// Wait until post becomes available
+				logger.debug("Waiting a few seconds for the post to become available...");
+				setTimeout(function() {
+					grabPost(id);
+				}, 5000);
+			} else {
+				// Index next post
+				logger.debug("Moving on to next post...");
+				setTimeout(function() {
+					grabPost(id + 1);
+				}, 300);
+			}
+		} else if (response.statusCode == 403) {
+			logger.info("Post #" + id + " deleted");
+			// Index next post
+			setTimeout(function() {
+				grabPost(id + 1);
+			}, 300);
+		} else if (response.statusCode == 200) {
+			parsePost(response, body, id);
+			// Index next post
+			setTimeout(function() {
+				grabPost(id + 1);
+			}, 300);
+		} else {
+			logger.error("Got unknown error code " + response.statusCode + " for " + id);
+			// Wait until server is available
+			logger.error("Waiting 10 seconds...");
+			setTimeout(function() {
+				grabPost(id);
+			}, 10000);
+		}
+	});
 }
 client.ping({
-    requestTimeout: 30000,
-
-    // undocumented params are appended to the query string
-    hello: "elasticsearch"
+	requestTimeout: 30000,
+	// undocumented params are appended to the query string
+	hello: "elasticsearch"
 }, function(error) {
-    if (error) {
-        logger.fatal("elasticsearch is down!");
-        // console.error('elasticsearch cluster is down!');
-    } else {
-        // console.log('All is well');
-        logger.info("Connected to elasticsearch!");
-        var startPost = JSON.parse(fs.readFileSync("currentID.json"));
-        logger.info("Resuming at post #" + startPost);
-        grabPost(startPost);
-    }
+	if (error) {
+		logger.fatal("elasticsearch is down!");
+		// console.error('elasticsearch cluster is down!');
+	} else {
+		// console.log('All is well');
+		logger.info("Connected to elasticsearch!");
+		var startPost = JSON.parse(fs.readFileSync("currentID.json"));
+		logger.info("Resuming at post #" + startPost);
+		grabPost(startPost);
+	}
 });
