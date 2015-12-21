@@ -3,6 +3,7 @@ var elasticsearch = require("elasticsearch");
 var cheerio = require("cheerio");
 var log4js = require('log4js');
 var fs = require("fs");
+require("heapdump");
 var logger = log4js.getLogger();
 require("sugar");
 var client = new elasticsearch.Client({
@@ -52,6 +53,7 @@ function parsePost(response, body, id) {
         postEditAuthor = author;
         postEditTime = time;
     }
+    $ = null; // help free up some memory
 
     // Get the BBCode source of the post
     var postSource;
@@ -107,6 +109,7 @@ function parsePost(response, body, id) {
                     index: "s2forums",
                     type: "post",
                     id: id,
+                    requestTimeout: 60000,
                     body: {
                         author: author,
                         authorID: authorID,
@@ -174,24 +177,25 @@ function grabPost(id) {
                 logger.debug("Moving on to next post...");
                 setTimeout(function() {
                     grabPost(id + 1);
-                }, 100);
+                }, 300);
             }
         } else if (response.statusCode == 403) {
             logger.info("Post #" + id + " deleted");
             // Index next post
             setTimeout(function() {
                 grabPost(id + 1);
-            }, 100);
+            }, 300);
         } else if (response.statusCode == 200) {
             parsePost(response, body, id);
             // Index next post
             setTimeout(function() {
                 grabPost(id + 1);
-            }, 100);
+            }, 300);
         } else {
             logger.error("Got unknown error code " + response.statusCode +
                 " for " + id);
             // Wait until server is available
+            logger.error("Waiting 10 seconds...");
             setTimeout(function() {
                 grabPost(id);
             }, 10000);
