@@ -55,10 +55,12 @@ function parsePost(response, body, id) {
 	logger.trace("Topic title: " + topic);
 	var postText = $(p + ".post_body_html").text();
 	var postHtml = $(p + ".post_body_html").html();
+	var postEditAuthor;
+	var postEditTime;
 	try {
-		var postEditAuthor = $(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[0];
+		postEditAuthor = $(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[0];
 		logger.trace("Post last edited by: " + postEditAuthor);
-		var postEditTime = Date.create($(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[1].split(")")[0]);
+		postEditTime = Date.create($(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[1].split(")")[0]);
 		logger.trace("Post last edited on: " + postEditTime);
 	} catch (e) {
 		// post wasn't edited
@@ -87,7 +89,7 @@ function parsePost(response, body, id) {
 			}, function(error, response) {
 				if (response.found) {
 					// post already in index
-					if (postEditTime.is(Date.utc.create(response._source.revisions[response._source.revisions.length - 1].time))) {
+					if (!postEditTime.is(Date.utc.create(response._source.revisions[response._source.revisions.length - 1].time))) {
 						// post updated
 						client.update({
 							index: "s2forums",
