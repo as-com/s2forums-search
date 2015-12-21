@@ -1,0 +1,15 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <img src="https://cdn2.scratch.mit.edu/get_image/user/{{ifIsNull _source.authorID "default"}}_16x16.png" width=16 height=16>
+        <strong><a href="https://scratch.mit.edu/users/{{_source.author}}/">{{_source.author}}</a></strong>
+        wrote on <a href="https://scratch.mit.edu/discuss/topic/{{_source.topicID}}/">{{_source.topic}}</a>
+        <div class="pull-right"><a href="https://scratch.mit.edu/discuss/post/{{_id}}"><time datetime="{{_source.time}}">{{formatTime _source.time}}</time></a></div>
+    </div>
+    <ul class="list-group">
+        {{#_source.revisions}}
+        <li class="list-group-item">
+            <h4>Revision by {{author}} on <time datetime="{{time}}">{{formatTime time}}</time></h3>
+            {{{html}}}
+        {{/_source.revisions}}
+    </ul>
+</div>

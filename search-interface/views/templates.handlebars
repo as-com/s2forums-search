@@ -1,0 +1,8 @@
+(function () {
+    var revive    = Handlebars.template,
+        templates = Handlebars.templates = Handlebars.templates || {};
+  {{#templates}}
+    templates['{{{name}}}'] = revive({{{template}}});
+  {{/templates}}
+  Handlebars.partials = templates;
+}());
