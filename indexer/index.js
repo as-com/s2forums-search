@@ -87,14 +87,14 @@ function parsePost(response, body, id) {
 			}, function(error, response) {
 				if (response.found) {
 					// post already in index
-					if (postEditTime.is(response._source.revisions[response._source.revisions.length - 1].time)) {
+					if (postEditTime.is(Date.utc.create(response._source.revisions[response._source.revisions.length - 1].time))) {
 						// post updated
 						client.update({
 							index: "s2forums",
 							type: "post",
 							id: id,
 							body: {
-								script: "ctx._source.revisions.push(rev)",
+								script: "ctx._source.revisions.add(rev)",
 								params: {
 									rev: {
 										author: postEditAuthor,
