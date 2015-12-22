@@ -8,7 +8,7 @@ var logger = log4js.getLogger();
 require("sugar");
 var moment = require("moment-timezone");
 var client = new elasticsearch.Client({
-	host: 'elasticsearch:9200',
+	host: 'localhost:9200',
 	log: 'info'
 });
 logger.setLevel('TRACE');
