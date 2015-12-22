@@ -6,6 +6,7 @@ var fs = require("fs");
 require("heapdump");
 var logger = log4js.getLogger();
 require("sugar");
+var moment = require("moment-timezone");
 var client = new elasticsearch.Client({
 	host: 'elasticsearch:9200',
 	log: 'info'
@@ -34,7 +35,8 @@ function parsePost(response, body, id) {
 		logger.warn("Server sent page, but post #" + id + " not found");
 		return;
 	}
-	var time = Date.create($(p + ".box-head > a").text());
+	// Contains the time in UTC, in a string
+	var time = moment.tz(Date.create($(p + ".box-head > a").text()).getTime(), "America/New_York").tz("UTC").format("YYYY-MM-DDTHH:MM:SS");
 	logger.trace("Time: " + time);
 	var author = $(p + "a.username").text();
 	logger.trace("Author: " + author);
@@ -53,7 +55,7 @@ function parsePost(response, body, id) {
 	try {
 		postEditAuthor = $(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[0];
 		logger.trace("Post last edited by: " + postEditAuthor);
-		postEditTime = Date.create($(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[1].split(")")[0]);
+		postEditTime = moment.tz(Date.create($(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[1].split(")")[0]).getTime(), "America/New_York").tz("UTC").format("YYYY-MM-DDTHH:MM:SS");
 		logger.trace("Post last edited on: " + postEditTime);
 	} catch (e) {
 		// post wasn't edited
@@ -82,7 +84,9 @@ function parsePost(response, body, id) {
 			}, function(error, response) {
 				if (response.found) {
 					// post already in index
-					if (!postEditTime.is(Date.utc.create(response._source.revisions[response._source.revisions.length - 1].time))) {
+					// NOTE: Posts before 131141 store their date in UTC-12. Don't ask why.
+					// posts after that use UTC.
+					if (postEditTime != response._source.revisions[response._source.revisions.length - 1].time) {
 						// post updated
 						client.update({
 							index: "s2forums",
@@ -93,7 +97,7 @@ function parsePost(response, body, id) {
 								params: {
 									rev: {
 										author: postEditAuthor,
-										time: postEditTime.format("{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"),
+										time: postEditTime,
 										text: postText,
 										html: postHtml,
 										source: postSource
@@ -125,13 +129,13 @@ function parsePost(response, body, id) {
 						body: {
 							author: author,
 							authorID: authorID,
-							time: time.format("{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"),
+							time: time,
 							topic: topic,
 							topicID: topicID,
 							section: section,
 							revisions: [{
 								author: postEditAuthor,
-								time: postEditTime.format("{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"),
+								time: postEditTime,
 								text: postText,
 								html: postHtml,
 								source: postSource
