@@ -1,3 +1,4 @@
+process.env.TZ = 'Europe/Amsterdam';
 var request = require("request");
 var elasticsearch = require("elasticsearch");
 var cheerio = require("cheerio");
