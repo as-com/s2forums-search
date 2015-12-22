@@ -53,6 +53,8 @@ function parsePost(response, body, id) {
 	logger.trace("Topic ID: " + topicID);
 	var topic = $(".linkst ul>li:last-child").contents(":not(:empty)").first().text().substr(1).trim();
 	logger.trace("Topic title: " + topic);
+	var section = $(".linkst ul>li:nth-child(2)>a").text();
+	logger.trace("Topic section: " + section);
 	var postText = $(p + ".post_body_html").text();
 	var postHtml = $(p + ".post_body_html").html();
 	var postEditAuthor;
@@ -135,6 +137,7 @@ function parsePost(response, body, id) {
 							time: time.format("{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"),
 							topic: topic,
 							topicID: topicID,
+							section: section,
 							revisions: [{
 								author: postEditAuthor,
 								time: postEditTime.format("{yyyy}-{MM}-{dd}T{hh}:{mm}:{ss}"),
