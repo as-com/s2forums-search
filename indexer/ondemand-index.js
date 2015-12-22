@@ -7,20 +7,20 @@ require("heapdump");
 var logger = log4js.getLogger();
 require("sugar");
 var client = new elasticsearch.Client({
-	host: 'elasticsearch:9200',
+	host: 'localhost:9200',
 	log: 'info'
 });
-logger.setLevel('DEBUG');
+logger.setLevel('TRACE');
 var post = 1;
 
 function writeState(id) {
-	fs.writeFile("currentID.json", JSON.stringify(id), function(err, data) {
-		if (err) {
-			logger.error("Failed to write state file: " + err);
-		} else {
-			logger.trace("Wrote state file to " + id);
-		}
-	})
+	// fs.writeFile("currentID.json", JSON.stringify(id), function(err, data) {
+	// 	if (err) {
+	// 		logger.error("Failed to write state file: " + err);
+	// 	} else {
+	// 		logger.trace("Wrote state file to " + id);
+	// 	}
+	// })
 }
 
 function parsePost(response, body, id) {
@@ -80,7 +80,8 @@ function parsePost(response, body, id) {
 			}, function(error, response) {
 				if (response.found) {
 					// post already in index
-					if (!postEditTime.is(Date.utc.create(response._source.revisions[response._source.revisions.length - 1].time))) {
+					// NOTE: Database stores times in UTC-12, don't ask why
+					if (!postEditTime.toString() == Date.utc.create(response._source.revisions[response._source.revisions.length - 1].time).toString()) {
 						// post updated
 						client.update({
 							index: "s2forums",
@@ -177,23 +178,23 @@ function grabPost(id) {
 				}, 5000);
 			} else {
 				// Index next post
-				logger.debug("Moving on to next post...");
-				setTimeout(function() {
-					grabPost(id + 1);
-				}, 300);
+				// logger.debug("Moving on to next post...");
+				// setTimeout(function() {
+				// 	grabPost(id + 1);
+				// }, 300);
 			}
 		} else if (response.statusCode == 403) {
 			logger.info("Post #" + id + " deleted");
-			// Index next post
-			setTimeout(function() {
-				grabPost(id + 1);
-			}, 300);
+			// // Index next post
+			// setTimeout(function() {
+			// 	grabPost(id + 1);
+			// }, 300);
 		} else if (response.statusCode == 200) {
 			parsePost(response, body, id);
-			// Index next post
-			setTimeout(function() {
-				grabPost(id + 1);
-			}, 300);
+			// // Index next post
+			// setTimeout(function() {
+			// 	grabPost(id + 1);
+			// }, 300);
 		} else {
 			logger.error("Got unknown error code " + response.statusCode + " for " + id);
 			// Wait until server is available
@@ -215,8 +216,17 @@ client.ping({
 	} else {
 		// console.log('All is well');
 		logger.info("Connected to elasticsearch!");
-		var startPost = JSON.parse(fs.readFileSync("currentID.json"));
-		logger.info("Resuming at post #" + startPost);
-		grabPost(startPost);
+		// var startPost = JSON.parse(fs.readFileSync("currentID.json"));
+		// logger.info("Resuming at post #" + startPost);
+		process.argv.forEach(function(val, index, array) {
+			// console.log(index + ': ' + val);
+			if (index >= 2) {
+				logger.info("Indexing post #" + val);
+				setTimeout(function() {
+					grabPost(val);
+				}, index * 1000);
+			}
+		});
+		// grabPost(process.argv[2]);
 	}
 });

@@ -9,11 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.14.2",
+    "elasticsearch": "^10.0.1",
     "express": "^4.13.3",
-    "express-react-views": "^0.9.0",
+    "express-handlebars": "^2.0.1",
+    "handlebars": "^4.0.5",
     "lodash": "^3.10.1",
-    "react": "^0.14.3",
-    "react-dom": "^0.14.3",
+    "log4js": "^0.6.29",
     "socketcluster-server": "^2.0.3"
   }
 }
