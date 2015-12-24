@@ -16,16 +16,16 @@ logger.setLevel('DEBUG');
 var post = 1;
 
 function writeState(id) {
-	fs.writeFile("currentID.json", JSON.stringify(id), function(err, data) {
-		if (err) {
-			logger.error("Failed to write state file: " + err);
-		} else {
-			logger.trace("Wrote state file to " + id);
-		}
-		err = null;
-		data = null;
-	})
-	id = null;
+	fs.writeFileSync("currentID.json", JSON.stringify(id));
+	// , function(err, data) {
+	// 	if (err) {
+	// 		logger.error("Failed to write state file: " + err);
+	// 	} else {
+	// 		logger.trace("Wrote state file to " + id);
+	// 	}
+	// 	err = null;
+	// 	data = null;
+	// }
 }
 
 function parsePost(response, body, id) {
