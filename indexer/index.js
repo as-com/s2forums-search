@@ -92,15 +92,7 @@ function parsePost(response, body, id) {
 				type: "post",
 				id: id
 			}, function(error, response) {
-				if (error) {
-					logger.error("Error getting existing item: " + error);
-					logger.error("Trying again...");
-					setTimeout(function() {
-						grabPost(id);
-					}, 5000);
-					error = null;
-					response = null;
-				} else if (response.found) {
+				if (response.found) {
 					// post already in index
 					// NOTE: Posts before 131141 store their date in UTC-12. Don't ask why.
 					// posts after that use UTC.
