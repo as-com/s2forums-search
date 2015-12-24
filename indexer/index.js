@@ -5,6 +5,7 @@ var cheerio = require("cheerio");
 var log4js = require('log4js');
 var fs = require("fs");
 require("heapdump");
+var memwatch = require('memwatch-next');
 var logger = log4js.getLogger();
 require("sugar");
 var moment = require("moment-timezone");
@@ -15,17 +16,26 @@ var client = new elasticsearch.Client({
 logger.setLevel('DEBUG');
 var post = 1;
 
+memwatch.on('leak', function(info) {
+	logger.warn("MEMORY LEAK: " + info);
+});
+
+setInterval(function() {
+	memwatch.gc();
+	logger.info("Collected garbage");
+}, 120000);
+
 function writeState(id) {
-	fs.writeFile("currentID.json", JSON.stringify(id), function(err, data) {
-		if (err) {
-			logger.error("Failed to write state file: " + err);
-		} else {
-			logger.trace("Wrote state file to " + id);
-		}
-		err = null;
-		data = null;
-	})
-	id = null;
+	fs.writeFileSync("currentID.json", JSON.stringify(id));
+	// , function(err, data) {
+	// 	if (err) {
+	// 		logger.error("Failed to write state file: " + err);
+	// 	} else {
+	// 		logger.trace("Wrote state file to " + id);
+	// 	}
+	// 	err = null;
+	// 	data = null;
+	// }
 }
 
 function parsePost(response, body, id) {
