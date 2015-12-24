@@ -22,7 +22,10 @@ function writeState(id) {
 		} else {
 			logger.trace("Wrote state file to " + id);
 		}
+		err = null;
+		data = null;
 	})
+	id = null;
 }
 
 function parsePost(response, body, id) {
@@ -64,7 +67,9 @@ function parsePost(response, body, id) {
 		postEditAuthor = author;
 		postEditTime = time;
 	}
-	$ = null; // help free up some memory, this actually fixed the massive memory leak
+	$ = null; // help free up some memory
+	response = null;
+	body = null;
 	// Get the BBCode source of the post
 	var postSource;
 	request("https://scratch.mit.edu/discuss/post/" + id + "/source/", function(error, response, body) {
@@ -73,9 +78,13 @@ function parsePost(response, body, id) {
 			logger.error("Trying again...");
 			setTimeout(function() {
 				grabPost(id);
-			}, 1000);
+			}, 5000);
+			error = null;
+			response = null;
+			body = null;
 		} else {
 			postSource = body;
+			body = null;
 			logger.trace("Successfully got BBCode");
 			// check if we already have it
 			client.get({
@@ -83,12 +92,21 @@ function parsePost(response, body, id) {
 				type: "post",
 				id: id
 			}, function(error, response) {
-				if (response.found) {
+				if (error) {
+					logger.error("Error getting existing item: " + error);
+					logger.error("Trying again...");
+					setTimeout(function() {
+						grabPost(id);
+					}, 5000);
+					error = null;
+					response = null;
+				} else if (response.found) {
 					// post already in index
 					// NOTE: Posts before 131141 store their date in UTC-12. Don't ask why.
 					// posts after that use UTC.
 					if (postEditTime != response._source.revisions[response._source.revisions.length - 1].time) {
 						// post updated
+						response = null;
 						client.update({
 							index: "s2forums",
 							type: "post",
@@ -108,18 +126,24 @@ function parsePost(response, body, id) {
 						}, function(error, response) {
 							if (error) {
 								logger.error("Failed to update post #" + id + ": " + error);
+								error = null;
+								response = null;
 								// logger.error("Trying again...");
 								// grabPost(id);
 							} else {
 								logger.info("Updated post #" + id);
 								writeState(id);
+								error = null;
+								response = null;
 							}
 						});
 					} else {
 						logger.info("Skipping post #" + id);
 						writeState(id);
+						response = null;
 					}
 				} else {
+					response = null;
 					// index it
 					logger.debug("Indexing post #" + id);
 					client.create({
@@ -149,10 +173,13 @@ function parsePost(response, body, id) {
 							logger.error("Trying again...");
 							setTimeout(function() {
 								grabPost(id);
-							}, 1000);
+							}, 5000);
+							response = null;
+							error = null;
 						} else {
 							logger.info("Indexed post #" + id);
 							writeState(id);
+							response = null;
 						}
 					});
 				}
@@ -173,6 +200,9 @@ function grabPost(id) {
 			setTimeout(function() {
 				grabPost(id);
 			}, 10000);
+			error = null;
+			response = null;
+			body = null;
 		}
 		if (response.statusCode == 404) {
 			logger.info("404 for post #" + id);
@@ -190,18 +220,24 @@ function grabPost(id) {
 					grabPost(id + 1);
 				}, 300);
 			}
+			response = null;
+			body = null;
 		} else if (response.statusCode == 403) {
 			logger.info("Post #" + id + " deleted");
 			// Index next post
 			setTimeout(function() {
 				grabPost(id + 1);
 			}, 300);
+			response = null;
+			body = null;
 		} else if (response.statusCode == 200) {
 			parsePost(response, body, id);
 			// Index next post
 			setTimeout(function() {
 				grabPost(id + 1);
 			}, 300);
+			response = null;
+			body = null;
 		} else {
 			logger.error("Got unknown error code " + response.statusCode + " for " + id);
 			// Wait until server is available
@@ -209,6 +245,8 @@ function grabPost(id) {
 			setTimeout(function() {
 				grabPost(id);
 			}, 10000);
+			response = null;
+			body = null;
 		}
 	});
 }
@@ -219,6 +257,7 @@ client.ping({
 }, function(error) {
 	if (error) {
 		logger.fatal("elasticsearch is down!");
+		process.exit(1);
 		// console.error('elasticsearch cluster is down!');
 	} else {
 		// console.log('All is well');
