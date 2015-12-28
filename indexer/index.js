@@ -1,10 +1,12 @@
 process.env.TZ = 'America/New_York';
-var request = require("request");
+var request = require("request").defaults({
+	"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36 comp09/s2forumsbot"
+});
 var elasticsearch = require("elasticsearch");
 var cheerio = require("cheerio");
 var log4js = require('log4js');
 var fs = require("fs");
-require("heapdump");
+// require("heapdump");
 var memwatch = require('memwatch-next');
 var logger = log4js.getLogger();
 require("sugar");
@@ -190,6 +192,8 @@ function parsePost(response, body, id) {
 	});
 }
 
+var reqDelay = 0;
+
 function grabPost(id) {
 	// fs.writeFile("currentID.json", id);
 	request.get({
@@ -205,6 +209,7 @@ function grabPost(id) {
 			error = null;
 			response = null;
 			body = null;
+			return;
 		}
 		if (response.statusCode == 404) {
 			logger.info("404 for post #" + id);
@@ -220,7 +225,7 @@ function grabPost(id) {
 				logger.debug("Moving on to next post...");
 				setTimeout(function() {
 					grabPost(id + 1);
-				}, 300);
+				}, reqDelay);
 			}
 			response = null;
 			body = null;
@@ -229,7 +234,7 @@ function grabPost(id) {
 			// Index next post
 			setTimeout(function() {
 				grabPost(id + 1);
-			}, 300);
+			}, reqDelay);
 			response = null;
 			body = null;
 		} else if (response.statusCode == 200) {
@@ -237,7 +242,7 @@ function grabPost(id) {
 			// Index next post
 			setTimeout(function() {
 				grabPost(id + 1);
-			}, 300);
+			}, reqDelay);
 			response = null;
 			body = null;
 		} else {
