@@ -79,10 +79,25 @@ app.get("/api/search", function(req, res) {
 		"query": {
 			"multi_match": {
 				"query": query,
+				// "type": "phrase",
 				"fields": ["revisions.text^1.5", "topic", "author^0.6"],
-				// "slop": 1
-			}
+				"minimum_should_match": "50%",
+				// "slop": 25
+			}	
 		},
+		"rescore": {
+	        "window_size": 100,
+	        "query": {
+	            "rescore_query": {
+					"multi_match": {
+						"query": query,
+						"type": "phrase",
+						"fields": ["revisions.text^1.5", "topic", "author^0.6"],
+						"slop": 50
+					}
+	            }
+	        }
+	    },
 		"highlight": {
 			"pre_tags": ["<b>"],
 			"post_tags": ["</b>"],

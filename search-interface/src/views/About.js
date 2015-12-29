@@ -21,6 +21,7 @@ export default function() {
             <h2>Planned features</h2>
             <ul>
                 <li>Advanced search (aka faceted search)</li>
+                <li>Better results for languages other than "strings of characters separated by spaces"</li>
                 <li>Live post view</li>
                 <li>A better "about" page</li>
             </ul>
