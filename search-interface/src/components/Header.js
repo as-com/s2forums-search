@@ -2,6 +2,7 @@ import React from "react"
 import { Link, IndexLink } from "react-router"
 import { Nav, Navbar, NavItem } from "react-bootstrap"
 import { LinkContainer, IndexLinkContainer } from "react-router-bootstrap"
+import Icon from "./Icon"
 import PostCount from "./PostCount"
 import Form from "./Form"
 
@@ -27,6 +28,9 @@ export default function () {
             <Navbar.Form pullLeft>
                 <Form size="medium" autoFocus={false} />
             </Navbar.Form>
+            <Nav>
+                <NavItem href="https://github.com/as-com/s2forums-search" target="_blank"><Icon name="github" /> Fork me on GitHub</NavItem>
+            </Nav>
             <Navbar.Text pullRight>
                 <span className="post-count"><strong><PostCount /></strong> posts indexed so far.</span>
             </Navbar.Text>
