@@ -5,7 +5,7 @@ import Icon from "./Icon"
 import ErrorMessage from "./ErrorMessage"
 
 if (__CLIENT__)
-    var $ = require("npm-zepto");
+    var $ = require("browserify-zepto");
 
 export default class ViewSource extends React.Component {
     loadPost() {

@@ -4,7 +4,7 @@ import ErrorMessage from "../components/ErrorMessage"
 import Spinner from "react-spinner"
 
 if (__CLIENT__)
-    var $ = require("npm-zepto");
+    var $ = require("browserify-zepto");
 
 export default class Search extends React.Component {
     loadSearchResults() {

@@ -6,7 +6,7 @@ import ErrorMessage from "../components/ErrorMessage"
 
 if (__CLIENT__) {
     var scratchblocks2 = require("../lib/scratchblocks");
-    var $ = require("npm-zepto");
+    var $ = require("browserify-zepto");
 }
 
 export default class PostView extends React.Component {

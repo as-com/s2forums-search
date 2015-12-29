@@ -85,7 +85,7 @@
  */
 
 if (__CLIENT__)
-    var jQuery = require("npm-zepto"); // such hacky
+    var jQuery = require("browserify-zepto"); // such hacky
 
 String.prototype.startsWith = function(prefix) {
     return this.indexOf(prefix) === 0;

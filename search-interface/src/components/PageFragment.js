@@ -4,7 +4,7 @@ import Transmit from "react-transmit"
 import ErrorMessage from "./ErrorMessage"
 
 if (__CLIENT__)
-    var $ = require("npm-zepto");
+    var $ = require("browserify-zepto");
 
 
 function fetchPage(name) {
