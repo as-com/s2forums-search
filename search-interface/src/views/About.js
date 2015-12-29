@@ -16,6 +16,7 @@ export default function() {
                 <li>Bad user input is sometimes treated badly.</li>
                 <li>I'm not a great user interface designer, so some parts may look bad or not make sense.</li>
                 <li>The search results may not be the most relevant. Relevance still needs optimization.</li>
+                <li>The amount of JavaScript loaded could be reduced a bit</li>
             </ul>
             <h2>Planned features</h2>
             <ul>
