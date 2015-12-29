@@ -33,7 +33,7 @@ var server = http.createServer(app);
 var io = require("socket.io")(server);
 
 var esclient = new elasticsearch.Client({
-	host: '192.168.1.65:9200',
+	host: 'elasticsearch:9200',
 	log: 'info'
 });
 
