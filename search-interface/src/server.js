@@ -12,6 +12,7 @@ import moment from "moment-timezone"
 import memwatch from "memwatch-next"
 import cacheResponseDirective from "express-cache-response-directive"
 import DocumentTitle from "react-document-title"
+import escapeHTML from "lib/escapeHTML"
 
 import routes from "views/routes"
 
@@ -33,7 +34,7 @@ var server = http.createServer(app);
 var io = require("socket.io")(server);
 
 var esclient = new elasticsearch.Client({
-	host: 'elasticsearch:9200',
+	host: '192.168.1.65:9200',
 	log: 'info'
 });
 
@@ -118,27 +119,33 @@ app.get("/api/search", function(req, res) {
 		index: 's2forums',
 		body: queryBody,
 	}).then(function(body) {
-		body.hits.hits.forEach(function(element) {
-			element.id = element._id;
-			delete element._id;
-			delete element._type;
-			delete element._index;
-			// Normalize times
-			element._source.time = normalizeTime(element._source.time, element._id);
-			if (!("revisions.text" in element.highlight)) {
-				element.highlight["revisions.text"] = ["<span class='text-muted'>Post empty</span><!--<b>-->"];
-			}
+		try {
+			body.hits.hits.forEach(function(element) {
+				// Normalize times
+				element._source.time = normalizeTime(element._source.time, element._id);
 
-			// Elasticsearch does not properly escape no_match output
-			if (!~element.highlight["revisions.text"][0].indexOf("<b>")) {
-				element.highlight["revisions.text"][0] = escapeHTML(element.highlight["revisions.text"][0]);
-			}
-		});
-		delete body._shards;
+				if (!("revisions.text" in element.highlight)) {
+					element.highlight["revisions.text"] = ["<span class='text-muted'>Post empty</span><!--<b>-->"];
+				}
 
-		res.json({
-			response: body
-		});
+				// Elasticsearch does not properly escape no_match output
+				if (!~element.highlight["revisions.text"][0].indexOf("<b>")) {
+					element.highlight["revisions.text"][0] = escapeHTML(element.highlight["revisions.text"][0]);
+				}
+
+				element.id = element._id;
+				delete element._id;
+				delete element._type;
+				delete element._index;
+			});
+			delete body._shards;
+
+			res.json({
+				response: body
+			});
+		} catch(e) {
+			console.error(e.stack);
+		}
 	}, function(error) {
 		res.json({
 			error: error
@@ -165,9 +172,7 @@ app.get("/api/post", function(req, res) {
 			return;
 		}
 		response._source.time = normalizeTime(response._source.time, id);
-		response._source.revisions.forEach(function(element) {
-			element.time = normalizeTime(element.time, id);
-		});
+
 		delete response._index;
 		delete response._type;
 		// response.id = response._id;
