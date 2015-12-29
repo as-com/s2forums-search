@@ -82,8 +82,9 @@ app.get("/api/search", function(req, res) {
 				// "type": "phrase",
 				"fields": ["revisions.text^1.5", "topic", "author^0.6"],
 				"minimum_should_match": "50%",
+				"fuzziness": "AUTO"
 				// "slop": 25
-			}	
+			}
 		},
 		"rescore": {
 	        "window_size": 100,
@@ -93,6 +94,7 @@ app.get("/api/search", function(req, res) {
 						"query": query,
 						"type": "phrase",
 						"fields": ["revisions.text^1.5", "topic", "author^0.6"],
+						"fuzziness": "AUTO",
 						"slop": 50
 					}
 	            }
