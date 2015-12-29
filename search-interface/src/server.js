@@ -234,7 +234,7 @@ app.get("*", function(req, res) {
 		<link href="/css/style.css" rel="stylesheet" />
 	</head>
 	<body>
-		<div id="react-root">${reactString}</div><script>var currentPostCount = ${global.getDocCount()}</script>
+		<div id="react-root">${reactString}</div><script>var currentPostCount = ${JSON.stringify(global.getDocCount())}</script>
 	</body>
 </html>`
 			);
