@@ -13,6 +13,7 @@
     "elasticsearch": "^10.0.1",
     "heapdump": "^0.3.7",
     "log4js": "^0.6.29",
+    "memwatch-next": "^0.2.10",
     "moment-timezone": "^0.4.1",
     "request": "^2.67.0",
     "sugar": "^1.4.1"
