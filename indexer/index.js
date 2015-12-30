@@ -52,7 +52,7 @@ function parsePost(response, body, id) {
 		return;
 	}
 	// Contains the time in UTC, in a string
-	var time = moment(Date.create($(p + ".box-head > a").text())).format("YYYY-MM-DDTHH:MM:SS");
+	var time = moment(Date.create($(p + ".box-head > a").text())).format("YYYY-MM-DDTHH:mm:SS");
 	logger.trace("Time: " + time);
 	var author = $(p + "a.username").text();
 	logger.trace("Author: " + author);
@@ -71,7 +71,7 @@ function parsePost(response, body, id) {
 	try {
 		postEditAuthor = $(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[0];
 		logger.trace("Post last edited by: " + postEditAuthor);
-		postEditTime = moment(Date.create($(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[1].split(")")[0])).tz("UTC").format("YYYY-MM-DDTHH:MM:SS");
+		postEditTime = moment(Date.create($(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[1].split(")")[0])).tz("UTC").format("YYYY-MM-DDTHH:mm:SS");
 		logger.trace("Post last edited on: " + postEditTime);
 	} catch (e) {
 		// post wasn't edited
