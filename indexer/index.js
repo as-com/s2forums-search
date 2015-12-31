@@ -1,6 +1,10 @@
 process.env.TZ = 'America/New_York';
 var request = require("request").defaults({
-	"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36 comp09/s2forumsbot"
+	headers: {
+		"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36 comp09/s2forumsbot",
+		"Host": "scratch.mit.edu",
+	},
+	strictSSL: false
 });
 var elasticsearch = require("elasticsearch");
 var cheerio = require("cheerio");
@@ -52,7 +56,7 @@ function parsePost(response, body, id) {
 		return;
 	}
 	// Contains the time in UTC, in a string
-	var time = moment(Date.create($(p + ".box-head > a").text())).format("YYYY-MM-DDTHH:mm:SS");
+	var time = moment(Date.create($(p + ".box-head > a").text())).format("YYYY-MM-DDTHH:mm:ss");
 	logger.trace("Time: " + time);
 	var author = $(p + "a.username").text();
 	logger.trace("Author: " + author);
@@ -71,7 +75,7 @@ function parsePost(response, body, id) {
 	try {
 		postEditAuthor = $(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[0];
 		logger.trace("Post last edited by: " + postEditAuthor);
-		postEditTime = moment(Date.create($(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[1].split(")")[0])).tz("UTC").format("YYYY-MM-DDTHH:mm:SS");
+		postEditTime = moment(Date.create($(p + ".posteditmessage").text().split("Last edited by ")[1].split(" (")[1].split(")")[0])).tz("UTC").format("YYYY-MM-DDTHH:mm:ss");
 		logger.trace("Post last edited on: " + postEditTime);
 	} catch (e) {
 		// post wasn't edited
@@ -84,13 +88,13 @@ function parsePost(response, body, id) {
 	body = null;
 	// Get the BBCode source of the post
 	var postSource;
-	request("https://scratch.mit.edu/discuss/post/" + id + "/source/", function(error, response, body) {
+	request("https://18.85.28.66/discuss/post/" + id + "/source/", function(error, response, body) {
 		if (error) {
 			logger.error("Error getting BBCode: " + error);
 			logger.error("Trying again...");
 			setTimeout(function() {
 				grabPost(id);
-			}, 5000);
+			}, 30000);
 			error = null;
 			response = null;
 			body = null;
@@ -177,7 +181,7 @@ function parsePost(response, body, id) {
 							logger.error("Trying again...");
 							setTimeout(function() {
 								grabPost(id);
-							}, 5000);
+							}, 30000);
 							response = null;
 							error = null;
 						} else {
@@ -197,7 +201,7 @@ var reqDelay = 0;
 function grabPost(id) {
 	// fs.writeFile("currentID.json", id);
 	request.get({
-		uri: "https://scratch.mit.edu/discuss/post/" + id + "/",
+		uri: "https://18.85.28.66/discuss/post/" + id + "/",
 		timeout: 45000
 	}, function(error, response, body) {
 		if (error) {
@@ -247,11 +251,12 @@ function grabPost(id) {
 			body = null;
 		} else {
 			logger.error("Got unknown error code " + response.statusCode + " for " + id);
+			//logger.debug("response: " + body);
 			// Wait until server is available
-			logger.error("Waiting 10 seconds...");
+			logger.error("Waiting 30 seconds...");
 			setTimeout(function() {
 				grabPost(id);
-			}, 10000);
+			}, 30000);
 			response = null;
 			body = null;
 		}
