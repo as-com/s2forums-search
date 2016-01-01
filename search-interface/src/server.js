@@ -73,7 +73,7 @@ app.get("/api/search", function(req, res) {
 
 	var queryBody = {
 		"timeout": "1000ms",
-		"_source": ["author", "authorID", "time", "section"],
+		"_source": ["author", "authorID", "time", "section", "topic"],
 		"size": 10,
 		"from": 10 * ((req.query.p || 1) - 1),
 		"query": {
@@ -111,7 +111,7 @@ app.get("/api/search", function(req, res) {
 					"no_match_size": 150
 				},
 				"topic": {
-					"no_match_size": 9999
+					// "no_match_size": 9999
 				},
 			}
 		}
@@ -144,6 +144,9 @@ app.get("/api/search", function(req, res) {
 				if (!("revisions.text" in element.highlight)) {
 					element.highlight["revisions.text"] = ["<span class='text-muted'>Post empty</span><!--<b>-->"];
 				}
+				if (!("topic" in element.highlight)) {
+					element.highlight.topic = [element._source.topic];
+				}
 
 				// Elasticsearch does not properly escape no_match output
 				if (!~element.highlight["revisions.text"][0].indexOf("<b>")) {
@@ -154,6 +157,7 @@ app.get("/api/search", function(req, res) {
 				delete element._id;
 				delete element._type;
 				delete element._index;
+				delete element._source.topic;
 			});
 			delete body._shards;
 
