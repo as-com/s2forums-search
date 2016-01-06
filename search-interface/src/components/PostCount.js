@@ -6,7 +6,7 @@ export default class PostCount extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            count: __SERVER__ ? global.getDocCount() : currentPostCount
+            count: Number(__SERVER__ ? global.getDocCount() : currentPostCount).toLocaleString()
         }
     }
     componentWillMount = () => {
@@ -20,7 +20,7 @@ export default class PostCount extends React.Component {
         delete this.socket;
     }
     updatePostCount = (data) => {
-        this.setState({count: data});
+        this.setState({count: Number(data).toLocaleString()});
     }
     render() {
         return <span>{this.state.count}</span>
