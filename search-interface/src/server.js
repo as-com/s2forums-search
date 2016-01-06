@@ -77,19 +77,16 @@ app.get("/api/search", function(req, res) {
 		"size": 10,
 		"from": 10 * ((req.query.p || 1) - 1),
 		"query": {
-			"multi_match": {
-				"query": query,
-				// "type": "phrase",
-				"fields": ["revisions.text^1.5", "topic", "author^0.6"],
-				"minimum_should_match": "50%",
-				"fuzziness": "AUTO"
-				// "slop": 25
-			}
-		},
-		"rescore": {
-	        "window_size": 100,
-	        "query": {
-	            "rescore_query": {
+			"bool": {
+				"must": {
+					"multi_match": {
+						"query": query,
+						"fields": ["revisions.text^1.5", "topic", "author^0.6"],
+						"fuzziness": "AUTO",
+						"minimum_should_match": "30%",
+					}
+				},
+				"should": {
 					"multi_match": {
 						"query": query,
 						"type": "phrase",
@@ -97,9 +94,23 @@ app.get("/api/search", function(req, res) {
 						"fuzziness": "AUTO",
 						"slop": 50
 					}
-	            }
-	        }
-	    },
+				}
+			}
+		},
+		// "rescore": {
+	    //     "window_size": 100,
+	    //     "query": {
+	    //         "rescore_query": {
+		// 			"multi_match": {
+		// 				"query": query,
+		// 				"type": "phrase",
+		// 				"fields": ["revisions.text^1.5", "topic", "author^0.6"],
+		// 				"fuzziness": "AUTO",
+		// 				"slop": 50
+		// 			}
+	    //         }
+	    //     }
+	    // },
 		"highlight": {
 			"pre_tags": ["<b>"],
 			"post_tags": ["</b>"],
