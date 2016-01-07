@@ -91,7 +91,7 @@ app.get("/api/search", function(req, res) {
 						"query": query,
 						"type": "phrase",
 						"fields": ["revisions.text^1.5", "topic", "author^0.6"],
-						"fuzziness": "AUTO",
+						// "fuzziness": "AUTO",
 						"slop": 50
 					}
 				}
@@ -277,7 +277,7 @@ app.get("*", function(req, res) {
 			);
 
 			// this.type = "text/html";
-			res.send(Transmit.injectIntoMarkup(template, reactData, [`${webserver}/dist/client.js?v=0.4.0`]));
+			res.send(Transmit.injectIntoMarkup(template, reactData, [`${webserver}/dist/client.js?v=0.4.1`]));
 		}).catch(function(e) {
 			res.status(500).send("<img src='https://i.imgur.com/M11XaEq.png'><h1>Server error</h1><p>" + e + "</p>");
 		});
