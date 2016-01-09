@@ -25,7 +25,17 @@ module.exports = {
 		}),
 		new webpack.optimize.DedupePlugin(),
 		new webpack.optimize.OccurenceOrderPlugin(),
-		new webpack.optimize.UglifyJsPlugin()
+		new webpack.optimize.UglifyJsPlugin({
+		    compress: {
+		        unsafe: true,
+				screw_ie8: true
+		    },
+			output: {
+				screw_ie8: true,
+				//! Scratch Forums Search v0.4.2-beta | (c) Andrew Sun | https://github.com/as-com/s2forums-search
+				preamble: "//! Scratch Forums Search v0.4.2-beta | (c) Andrew Sun | https://github.com/as-com/s2forums-search"
+			}
+		})
 	],
 	module: {
 		loaders: [{
