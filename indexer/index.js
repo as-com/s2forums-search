@@ -3,7 +3,13 @@ var request = require("request").defaults({
 	headers: {
 		"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36 comp09/s2forumsbot",
 		"Host": "scratch.mit.edu",
-		"Accept-Language": "en-US,en;q=0.8"
+		"Accept-Language": "en-US,en;q=0.8",
+		"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+		"Cache-Control": "no-cache",
+		"Cookie": "scratchlanguage=en",
+		"DNT": "1",
+		"Pragma": "no-cache",
+		"Upgrade-Insecure-Requests": "1",
 	},
 	strictSSL: false
 });
@@ -52,10 +58,10 @@ function parsePost(response, body, id) {
 	// Super messy fragile parsing
 	var $ = cheerio.load(body);
 	var p = "#p" + id + " ";
-	if ($(p).length == 0) {
-		logger.warn("Server sent page, but post #" + id + " not found");
-		return;
-	}
+	// if ($(p).length == 0) {
+	// 	logger.warn("Server sent page, but post #" + id + " not found");
+	// 	return;
+	// }
 	// Contains the time in UTC, in a string
 	var time = moment(Date.create($(p + ".box-head > a").text())).format("YYYY-MM-DDTHH:mm:ss");
 	logger.trace("Time: " + time);
