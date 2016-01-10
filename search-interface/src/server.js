@@ -243,7 +243,7 @@ app.get("*", function(req, res) {
 	const location = createLocation(req.path);
 	const webserver = process.env.NODE_ENV === "production" ? "" : "//" + hostname + ":8080";
 	match({
-		routes, location
+		routes, location: req.url
 	}, (error, redirectLocation, renderProps) => {
 		if (redirectLocation) {
 			res.redirect(redirectLocation.pathname + redirectLocation.search/*, "/"*/);
@@ -289,7 +289,7 @@ app.get("*", function(req, res) {
 			// this.type = "text/html";
 			res.send(Transmit.injectIntoMarkup(template, reactData, [`${webserver}/dist/client.js?v=0.4.2`]));
 		}).catch(function(e) {
-			res.status(500).send("<img src='https://i.imgur.com/M11XaEq.png'><h1>Server error</h1><p>" + e + "</p>");
+			res.status(500).send("<img src='https://i.imgur.com/M11XaEq.png'><h1>Server error</h1><p>" + e.stack + "</p>");
 		});
 	});
 

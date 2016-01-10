@@ -33,7 +33,8 @@ export default React.createClass({
                 maxLength="100"
                 value={this.state.value}
                 autoFocus={this.props.autoFocus}
-                name="q" />
+                name="q"
+                value={this.props.val} />
                 {' '}
             </form>
         }

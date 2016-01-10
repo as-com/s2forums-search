@@ -1,5 +1,5 @@
 import React from "react"
-import {Panel, PageHeader, Col, Row} from "react-bootstrap"
+import {Panel, Col, Row} from "react-bootstrap"
 import SearchTiming from "./SearchTiming"
 import SearchResult from "./SearchResult"
 import SearchPagination from "./SearchPagination"
@@ -20,7 +20,6 @@ var SearchResults = function(props) {
     });
     return <DocumentTitle title={`“${props.query}” - Scratch Forums Search`}>
         <div>
-            <PageHeader>Search results for “{props.query}”</PageHeader>
                 <Row>
                     <Col sm={8} xs={12}>
                         <SearchTiming

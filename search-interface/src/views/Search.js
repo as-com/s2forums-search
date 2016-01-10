@@ -1,6 +1,8 @@
 import React from "react"
 import SearchResults from "../components/SearchResults"
 import ErrorMessage from "../components/ErrorMessage"
+import Form from "../components/Form"
+import {PageHeader} from "react-bootstrap"
 import Spinner from "react-spinner"
 
 if (__CLIENT__)
@@ -55,12 +57,20 @@ export default class Search extends React.Component {
         }
     }
     render() {
-        if (this.state.loading) {
-            return <Spinner />
-        }
-        if (this.state.error) {
-            return <ErrorMessage err={this.state.error} />
-        }
-        return <SearchResults res={this.state.response} query={this.props.location.query.q} page={parseInt(this.props.location.query.p) || 1} sort={this.props.location.query.sort || "relevance"} />
+        return <div>
+            <Form size="medium" autoFocus={false} val={this.props.location.query.q} />
+            {
+                (() => {
+                    if (this.state.loading) {
+                        return <Spinner />
+                    }
+                    else if (this.state.error) {
+                        return <ErrorMessage err={this.state.error} />
+                    } else {
+                        return <SearchResults res={this.state.response} query={this.props.location.query.q} page={parseInt(this.props.location.query.p) || 1} sort={this.props.location.query.sort || "relevance"} />
+                    }
+                })()
+            }
+        </div>
     }
 };

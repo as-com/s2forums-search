@@ -21,13 +21,13 @@ export default function () {
                 <IndexLinkContainer to="/">
                     <NavItem eventKey={1}>Home</NavItem>
                 </IndexLinkContainer>
+                <LinkContainer to="/live">
+                    <NavItem eventKey={2}>Live</NavItem>
+                </LinkContainer>
                 <LinkContainer to="/about">
                     <NavItem eventKey={2}>About</NavItem>
                 </LinkContainer>
             </Nav>
-            <Navbar.Form pullLeft>
-                <Form size="medium" autoFocus={false} />
-            </Navbar.Form>
             <Nav>
                 <NavItem href="https://github.com/as-com/s2forums-search" target="_blank"><Icon name="github" /> Fork me on GitHub</NavItem>
             </Nav>
