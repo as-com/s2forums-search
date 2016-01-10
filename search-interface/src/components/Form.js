@@ -34,7 +34,7 @@ export default React.createClass({
                 value={this.state.value}
                 autoFocus={this.props.autoFocus}
                 name="q"
-                value={this.props.val} />
+                defaultValue={this.props.val} />
                 {' '}
             </form>
         }
