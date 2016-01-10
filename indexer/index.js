@@ -1,16 +1,17 @@
 process.env.TZ = 'UTC-0';
 var request = require("request").defaults({
 	headers: {
-		"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36",
+		"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36 comp09/s2forumsbot",
 		"Host": "scratch.mit.edu",
 		"Accept-Language": "en-US,en;q=0.8",
 		"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
 		"Cache-Control": "no-cache",
-		"Cookie": "scratchlanguage=en; scratchsessionsid=y340nv69wdvr0vpx79ubl3vy3szes50f",
+		"Cookie": "scratchlanguage=en; scratchsessionsid=y340nv69wdvr0vpx79ubl3vy3szes50fo",
 		"DNT": "1",
 		"Pragma": "no-cache",
 		"Upgrade-Insecure-Requests": "1",
 	},
+	gzip: true,
 	strictSSL: false
 });
 var elasticsearch = require("elasticsearch");
