@@ -218,7 +218,7 @@ function grabPost(id) {
 		if (response.statusCode == 404) {
 			logger.info("404 for post #" + id);
 			// Workaround for early posts
-			if (id > 1719347) {
+			if (id > 1720076) {
 				// Wait until post becomes available
 				logger.debug("Waiting a few seconds for the post to become available...");
 				setTimeout(function() {
