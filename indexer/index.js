@@ -52,10 +52,10 @@ function parsePost(response, body, id) {
 	// Super messy fragile parsing
 	var $ = cheerio.load(body);
 	var p = "#p" + id + " ";
-	// if ($(p).length == 0) {
-	// 	logger.warn("Server sent page, but post #" + id + " not found");
-	// 	return;
-	// }
+	if ($(p).length == 0) {
+		logger.warn("Server sent page, but post #" + id + " not found");
+		return;
+	}
 	// Contains the time in UTC, in a string
 	var time = moment(Date.create($(p + ".box-head > a").text())).format("YYYY-MM-DDTHH:mm:ss");
 	logger.trace("Time: " + time);
