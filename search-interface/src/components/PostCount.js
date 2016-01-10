@@ -1,5 +1,4 @@
 import React from "react"
-import Transmit from "react-transmit"
 var io = require("socket.io-client");
 
 export default class PostCount extends React.Component {

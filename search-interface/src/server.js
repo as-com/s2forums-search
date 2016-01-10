@@ -334,6 +334,7 @@ function updateDocCount() {
 		type: "post"
 	}, function(error, response) {
 		if (response.count != docCount) {
+			pushNewPosts(response.count - docCount);
 			docCount = response.count;
 			docNS.emit("a", docCount);
 			// console.log(scServer.clients);
@@ -344,3 +345,30 @@ function updateDocCount() {
 docNS.on("connection", function(socket) {
 	socket.emit("a", docCount);
 });
+
+/*
+ * Live post view
+ */
+var liveNS = io.of("/live");
+function pushNewPosts(count) {
+	esclient.search({
+		index: "s2forums",
+		type: "post",
+		body: {
+			"_source": ["author", "authorID", "time", "section", "topic", "topicID", "revisions.html"],
+			"query": {
+				"match_all": {}
+			},
+			"size": count,
+			"sort": [
+				{
+					"time": {
+						"order": "desc"
+					}
+				}
+			]
+		}
+	}).then(function(resp) {
+		liveNS.emit("a", resp.hits.hits);
+	});
+}
