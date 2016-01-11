@@ -84,10 +84,10 @@ pre.blocks {
 	text-decoration: line-through;
 }
 .bb-big {
-	font-size: 17px;
+	font-size: 1.5em;
 }
 .bb-small {
-	font-size: 10px;
+	font-size: 0.75em;
 }
 
 .bb-quote-author {
@@ -139,4 +139,9 @@ pre.blocks {
     .resultPanel {
         margin-left: 50px;
     }
+}
+
+
+img {
+    max-width: 100%;
 }
