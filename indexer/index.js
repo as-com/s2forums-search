@@ -231,7 +231,7 @@ function grabPost(id) {
 				logger.debug("Waiting a few seconds for the post to become available...");
 				setTimeout(function() {
 					grabPost(id);
-				}, 5000);
+				}, 3000);
 			} else {
 				// Index next post
 				logger.debug("Moving on to next post...");
