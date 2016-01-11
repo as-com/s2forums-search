@@ -37,7 +37,8 @@ var SearchResults = function(props) {
             <SearchPagination
                 total={props.res.response.hits.total}
                 page={props.page}
-                query={props.query} />
+                query={props.query}
+                sort={props.sort} />
         </div>
     </DocumentTitle>
 }

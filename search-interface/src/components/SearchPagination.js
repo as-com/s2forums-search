@@ -7,7 +7,8 @@ export default React.createClass({
     handleSelect: function(e, selected) {
         this.history.pushState(this.state, "/search", {
             q: this.props.query,
-            p: selected.eventKey
+            p: selected.eventKey,
+            sort: this.props.sort
         });
     },
     render: function() {
