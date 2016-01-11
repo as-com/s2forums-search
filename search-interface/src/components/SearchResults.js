@@ -13,6 +13,7 @@ var SearchResults = function(props) {
                 key={result.id}
                 id={result.id}
                 author={result._source.author}
+                authorID={result._source.authorID}
                 topic={result.highlight.topic[0]}
                 text={result.highlight['revisions.text'].join(" (...) ")}
                 time={result._source.time} />

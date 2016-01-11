@@ -117,3 +117,26 @@ pre.blocks {
 }
 
 @import "animate-bounceIn.scss";
+
+.sideAvatar {
+    position: absolute;
+    left: -60px;
+    top: 0px;
+}
+.resultPanel {
+    position: relative;
+}
+@media (max-width: 991px) {
+    .sideAvatar {
+        position: initial;
+        // left: 0;
+        // top: 0;
+        width: 16px;
+        height: 16px;
+    }
+}
+@media (min-width: 991px) and (max-width: 1260px) {
+    .resultPanel {
+        margin-left: 50px;
+    }
+}

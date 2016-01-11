@@ -39,8 +39,8 @@ export default class Live extends React.Component {
     render() {
         return <DocumentTitle title="Live View - Scratch Forums Search">
             <div>
-                <PageHeader>Live View</PageHeader>
-                <p>See posts right as they are posted.</p>
+                <PageHeader>Live Post View</PageHeader>
+                <p>See posts moments after they are posted.</p>
                 {this.state.posts.map((element) => {
                     return <LivePost {...element} key={element.id} />
                 })}
