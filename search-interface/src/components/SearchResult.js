@@ -11,11 +11,7 @@ function createResultMarkup(text) {
 
 var SearchResult = function(props) {
     var title = (<h3>{props.author} wrote on <span dangerouslySetInnerHTML={createResultMarkup(props.topic)}></span><span className="pull-right"><PostTime time={props.time} /></span></h3>);
-    var style = {
-        color: "initial",
-        textDecoration: "none !important"
-    }
-    return <Link to={"/post/" + props.id} className="resultLink" style={style}>
+    return <Link to={"/post/" + props.id} className="resultLink">
             <Panel header={title}>
                 <div dangerouslySetInnerHTML={createResultMarkup(props.text)}></div>
             </Panel>

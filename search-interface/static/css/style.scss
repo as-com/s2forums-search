@@ -103,3 +103,15 @@ pre.blocks {
 .disabled.active > a {
     background-color: #fff;
 }
+
+
+.resultLink {
+    color: initial;
+    text-decoration: none !important;
+}
+.resultLink:hover {
+    color: initial;
+    div {
+        opacity: 0.9;
+    }
+}

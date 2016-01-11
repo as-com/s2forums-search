@@ -1,5 +1,5 @@
 import React from "react"
-var io = require("socket.io-client");
+import socketCluster from "socketcluster-client"
 
 export default class PostCount extends React.Component {
     constructor(props) {
@@ -8,14 +8,16 @@ export default class PostCount extends React.Component {
             count: Number(__SERVER__ ? global.getDocCount() : currentPostCount).toLocaleString()
         }
     }
-    componentWillMount = () => {
-        if (__CLIENT__) {
-            this.socket = io(window.location.host + "/postcount");
-            this.socket.on("a", this.updatePostCount);
-        }
+    componentDidMount = () => {
+        this.socket = socketCluster.connect();
+        this.channel = this.socket.subscribe("count");
+        this.channel.watch(this.updatePostCount);
+        this.socket.emit("getCount");
+        this.socket.on("count", this.updatePostCount);
     }
     componentWillUnmount = () => {
-        this.socket.off("a", this.updatePostCount);
+        // this.channel.destroy();
+        this.channel.unwatch(this.updatePostCount);
         delete this.socket;
     }
     updatePostCount = (data) => {

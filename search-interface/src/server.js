@@ -1,6 +1,7 @@
 import express from "express"
 import http from "http"
 import bodyParser from "body-parser"
+import socketClusterServer from "socketcluster-server"
 
 import React from "react"
 import ReactDOM from "react-dom/server"
@@ -31,7 +32,12 @@ var app = express();
 const hostname = process.env.HOSTNAME || "localhost";
 const port = process.env.PORT || 8000;
 var server = http.createServer(app);
-var io = require("socket.io")(server);
+var scServer = socketClusterServer.attach(server);
+
+scServer.addMiddleware(scServer.MIDDLEWARE_PUBLISH_IN, function(req, next) {
+	next({name: "denied", message: "Clients can't publish"});
+});
+
 
 var esclient = new elasticsearch.Client({
 	host: (process.env.ELASTIC || "192.168.1.65") + ':9200',
@@ -268,7 +274,7 @@ app.get("*", function(req, res) {
 		<title>${DocumentTitle.rewind()}</title>
 		<link rel="shortcut icon" href="/favicon.ico" />
 		<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/cerulean/bootstrap.min.css" rel="stylesheet" integrity="sha256-Ucf/ylcKTNevYP6l7VNUhGLDRZPQs1+LsbbxuzMxUJM= sha512-FW2XqnqMwERwg0LplG7D64h8zA1BsxvxrDseWpHLq8Dg8kOBmLs19XNa9oAajN/ToJRRklfDJ398sOU+7LcjZA==" crossorigin="anonymous" />
-		<link href="/css/style.css?v=0.3.0" rel="stylesheet" />
+		<link href="/css/style.css?v=0.5.0" rel="stylesheet" />
 	</head>
 	<body>
 		<div id="react-root">${reactString}</div><script>var currentPostCount = ${JSON.stringify(global.getDocCount())}</script>
@@ -287,7 +293,7 @@ app.get("*", function(req, res) {
 			);
 
 			// this.type = "text/html";
-			res.send(Transmit.injectIntoMarkup(template, reactData, [`${webserver}/dist/client.js?v=0.4.2`]));
+			res.send(Transmit.injectIntoMarkup(template, reactData, [`${webserver}/dist/client.js?v=0.5.0`]));
 		}).catch(function(e) {
 			res.status(500).send("<img src='https://i.imgur.com/M11XaEq.png'><h1>Server error</h1><p>" + e.stack + "</p>");
 		});
@@ -324,7 +330,6 @@ esclient.ping({
  * Live Document Count
  */
 var docCount = "?";
-var docNS = io.of("/postcount");
 global.getDocCount = () => {
 	return docCount;
 }
@@ -336,20 +341,22 @@ function updateDocCount() {
 		if (response.count != docCount) {
 			pushNewPosts(response.count - docCount);
 			docCount = response.count;
-			docNS.emit("a", docCount);
+			scServer.exchange.publish("count", docCount);
 			// console.log(scServer.clients);
 		}
 		// documentCount = response.count;
 	})
 }
-docNS.on("connection", function(socket) {
-	socket.emit("a", docCount);
+
+scServer.on("connection", function(socket) {
+	socket.on("getCount", function() {
+		socket.emit("count", docCount);
+	});
 });
 
 /*
  * Live post view
  */
-var liveNS = io.of("/live");
 function pushNewPosts(count) {
 	esclient.search({
 		index: "s2forums",
@@ -369,6 +376,18 @@ function pushNewPosts(count) {
 			]
 		}
 	}).then(function(resp) {
-		liveNS.emit("a", resp.hits.hits);
+		var transformed = resp.hits.hits.map((element) => {
+			return {
+				id: element._id,
+				topic: element._source.topic,
+				topicID: element._source.topicID,
+				author: element._source.author,
+				authorID: element._source.authorID,
+				section: element._source.section,
+				time: normalizeTime(element._source.time),
+				html: element._source.revisions[0].html
+			};
+		});
+		scServer.exchange.publish("live", transformed);
 	});
 }
