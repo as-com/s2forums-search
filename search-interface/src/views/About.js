@@ -17,12 +17,12 @@ export default function() {
                 <li>I'm not a great user interface designer, so some parts may look bad or not make sense.</li>
                 <li>The search results may not be the most relevant. Relevance still needs optimization.</li>
                 <li>The amount of JavaScript loaded could be reduced a bit</li>
+                <li>Malformed posts in the live post view can cause issues</li>
             </ul>
             <h2>Planned features</h2>
             <ul>
                 <li>Advanced search (aka faceted search)</li>
                 <li>Better results for languages other than "strings of characters separated by spaces"</li>
-                <li>Live post view</li>
                 <li>A better "about" page</li>
             </ul>
         </div>
