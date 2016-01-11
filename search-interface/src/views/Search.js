@@ -14,7 +14,7 @@ export default class Search extends React.Component {
             q: this.props.location.query.q,
             p: this.props.location.query.p || 1
         };
-        if (this.props.location.query.sort != "relevance") {
+        if (this.props.location.query.sort && this.props.location.query.sort != "relevance") {
             requestData.sort = this.props.location.query.sort;
         }
         $.ajax({
