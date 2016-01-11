@@ -20,11 +20,11 @@ export default class LivePost extends React.Component {
     }
     render() {
         var title = <h3>
-            <Link to={"/post/" + this.props.id} id={"p" + this.props.id}>
+            <Link to={"/post/" + this.props.id}>
                 <UserAvatar id={this.props.authorID} size={50} className="sideAvatar" /> {this.props.author} wrote on {this.props.topic} <span className="pull-right"><PostTime time={this.props.time} /></span>
             </Link>
         </h3>
-        return <Panel header={title} className="animated bounceIn resultPanel">
+        return <Panel header={title} className="animated bounceIn resultPanel" id={"p" + this.props.id}>
                     <div dangerouslySetInnerHTML={createResultMarkup(this.props.html)}></div>
                 </Panel>
     }
