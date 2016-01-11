@@ -18,9 +18,9 @@ export default class LivePost extends React.Component {
         scratchblocks2.parse(`#p${this.props.id} pre.blocks`);
     }
     render() {
-        var title = (<h3>{this.props.author} wrote on <span dangerouslySetInnerHTML={createResultMarkup(this.props.topic)}></span><span className="pull-right"><PostTime time={this.props.time} /></span></h3>);
+        var title = (<h3>{this.props.author} wrote on {this.props.topic} <span className="pull-right"><PostTime time={this.props.time} /></span></h3>);
         return <Link to={"/post/" + this.props.id} className="resultLink" id={"p" + this.props.id}>
-                <Panel header={title}>
+                <Panel header={title} className="animated bounceIn">
                     <div dangerouslySetInnerHTML={createResultMarkup(this.props.html)}></div>
                 </Panel>
             </Link>

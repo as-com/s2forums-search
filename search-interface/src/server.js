@@ -244,6 +244,9 @@ app.get("/api/post/source", function(req, res) {
 		res.send(response._source.revisions[req.query.id.r || 0].source);
 	});
 });
+app.get("/api/lastLive", function(req, res) {
+	res.json(livePosts);
+});
 
 app.get("*", function(req, res) {
 	const location = createLocation(req.path);
@@ -323,6 +326,7 @@ esclient.ping({
 		setInterval(function() {
 			updateDocCount();
 		}, 1000);
+		getInitialLivePosts();
 	}
 });
 
@@ -357,6 +361,44 @@ scServer.on("connection", function(socket) {
 /*
  * Live post view
  */
+var livePosts = [];
+
+function getInitialLivePosts() {
+	esclient.search({
+		index: "s2forums",
+		type: "post",
+		body: {
+			"_source": ["author", "authorID", "time", "section", "topic", "topicID", "revisions.html"],
+			"query": {
+				"match_all": {}
+			},
+			"size": 10,
+			"sort": [
+				{
+					"time": {
+						"order": "desc"
+					}
+				}
+			]
+		}
+	}).then(function(resp) {
+		livePosts = transformLive(resp.hits.hits);
+	});
+}
+function transformLive(hits) {
+	return hits.map((element) => {
+		return {
+			id: element._id,
+			topic: element._source.topic,
+			topicID: element._source.topicID,
+			author: element._source.author,
+			authorID: element._source.authorID,
+			section: element._source.section,
+			time: normalizeTime(element._source.time),
+			html: element._source.revisions[0].html
+		};
+	});
+}
 function pushNewPosts(count) {
 	esclient.search({
 		index: "s2forums",
@@ -376,18 +418,9 @@ function pushNewPosts(count) {
 			]
 		}
 	}).then(function(resp) {
-		var transformed = resp.hits.hits.map((element) => {
-			return {
-				id: element._id,
-				topic: element._source.topic,
-				topicID: element._source.topicID,
-				author: element._source.author,
-				authorID: element._source.authorID,
-				section: element._source.section,
-				time: normalizeTime(element._source.time),
-				html: element._source.revisions[0].html
-			};
-		});
+		var transformed = transformLive(resp.hits.hits);
+		livePosts = transformed.concat(livePosts);
+		livePosts.length = 10;
 		scServer.exchange.publish("live", transformed);
 	});
 }
