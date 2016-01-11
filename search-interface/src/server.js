@@ -14,6 +14,7 @@ import memwatch from "memwatch-next"
 import cacheResponseDirective from "express-cache-response-directive"
 import DocumentTitle from "react-document-title"
 import escapeHTML from "lib/escapeHTML"
+import domino from "domino"
 
 import routes from "views/routes"
 
@@ -385,6 +386,7 @@ function getInitialLivePosts() {
 		livePosts = transformLive(resp.hits.hits);
 	});
 }
+
 function transformLive(hits) {
 	return hits.map((element) => {
 		return {
