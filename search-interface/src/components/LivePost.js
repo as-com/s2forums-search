@@ -24,7 +24,7 @@ export default class LivePost extends React.Component {
                 <UserAvatar id={this.props.authorID} size={50} className="sideAvatar" /> {this.props.author} wrote on {this.props.topic} <span className="pull-right"><PostTime time={this.props.time} /></span>
             </Link>
         </h3>
-        return <Panel header={title} className={"animated bounceIn resultPanel"}>
+        return <Panel header={title} className="animated bounceIn resultPanel">
                     <div dangerouslySetInnerHTML={createResultMarkup(this.props.html)}></div>
                 </Panel>
     }
