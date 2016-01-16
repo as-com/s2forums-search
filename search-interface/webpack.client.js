@@ -33,7 +33,7 @@ module.exports = {
 			output: {
 				screw_ie8: true,
 				//! Scratch Forums Search v0.4.2-beta | (c) Andrew Sun | https://github.com/as-com/s2forums-search
-				preamble: "//! Scratch Forums Search v0.4.2-beta | (c) Andrew Sun | https://github.com/as-com/s2forums-search"
+				preamble: "//! Scratch Forums Search v0.5.4-beta | (c) Andrew Sun | https://github.com/as-com/s2forums-search"
 			}
 		})
 	],
