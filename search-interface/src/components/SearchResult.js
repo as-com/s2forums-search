@@ -10,7 +10,7 @@ function createResultMarkup(text) {
     }
 }
 
-var SearchResult = function(props) {
+export default function(props) {
     var title = (<h3><UserAvatar id={props.authorID} size={50} className="sideAvatar" /> {props.author} wrote on <span dangerouslySetInnerHTML={createResultMarkup(props.topic)}></span><span className="pull-right"><PostTime time={props.time} /></span></h3>);
     return <Link to={"/post/" + props.id} className="resultLink">
             <Panel header={title} className="resultPanel">
@@ -18,5 +18,3 @@ var SearchResult = function(props) {
             </Panel>
         </Link>
 }
-
-export default SearchResult;

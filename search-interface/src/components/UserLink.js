@@ -1,6 +1,5 @@
-import React from "react";
+import React from "react"
 
-var UserLink = function(props) {
+export default function(props) {
     return <a href={`https://scratch.mit.edu/users/${props.username}/`} target="_blank">{props.username}</a>
 }
-export default UserLink

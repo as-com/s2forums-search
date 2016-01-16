@@ -17,7 +17,7 @@ function createResultMarkup(text) {
 export default class LivePost extends React.Component {
     componentDidMount = () => {
         scratchblocks2.parse(`#p${this.props.id} pre.blocks`);
-    }
+    };
     render() {
         var title = <h3>
             <Link to={"/post/" + this.props.id}>
@@ -27,5 +27,5 @@ export default class LivePost extends React.Component {
         return <Panel header={title} className="animated bounceIn resultPanel" id={"p" + this.props.id}>
                     <div dangerouslySetInnerHTML={createResultMarkup(this.props.html)}></div>
                 </Panel>
-    }
+    };
 }

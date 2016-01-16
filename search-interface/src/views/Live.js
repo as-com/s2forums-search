@@ -15,7 +15,7 @@ export default class Live extends React.Component {
             posts: [],
             loading: true
         }
-    }
+    };
     componentDidMount = () => {
         this.socket = socketCluster.connect();
         this.channel = this.socket.subscribe("live");
@@ -27,17 +27,17 @@ export default class Live extends React.Component {
             success: this.addPost,
             // error: this.updatePostError
         });
-    }
+    };
     componentWillUnmount = () => {
         this.socket.unsubscribe("live");
         this.channel.unwatch();
         delete this.socket;
-    }
+    };
     addPost = (data) => {
         var dat = data.concat(this.state.posts);
         dat.length = 10;
         this.setState({posts: dat, loading: false});
-    }
+    };
     render() {
         return <DocumentTitle title="Live View - Scratch Forums Search">
             <div>
@@ -53,5 +53,5 @@ export default class Live extends React.Component {
                 })}
             </div>
         </DocumentTitle>
-    }
+    };
 }

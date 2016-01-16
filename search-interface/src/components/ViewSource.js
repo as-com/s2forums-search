@@ -17,7 +17,7 @@ export default class ViewSource extends React.Component {
             success: this.updateSourceView,
             error: this.updateSourceError
         });
-    }
+    };
     open = () => {
         this.setState({
             show: true,
@@ -25,30 +25,30 @@ export default class ViewSource extends React.Component {
             source: ""
         });
         this.loadPost();
-    }
+    };
     close = () => {
         this.setState({
             show: false
         });
         setTimeout(this.cleanUp, 400);
-    }
+    };
     cleanUp = () => {
         this.setState({
             source: ""
         });
-    }
+    };
     updateSourceView = (data) => {
         this.setState({
             loading: false,
             source: data
         });
-    }
+    };
     updateSourceError = (xhr, errType, err) => {
         this.setState({
             loading: false,
             source: <ErrorMessage err={err} />
         });
-    }
+    };
     constructor(props) {
         super(props);
         this.state = {
@@ -56,7 +56,7 @@ export default class ViewSource extends React.Component {
             source: "",
             loading: false
         }
-    }
+    };
     render() {
         return <div>
                 <Button className="pull-right" onClick={this.open}>
@@ -79,5 +79,5 @@ export default class ViewSource extends React.Component {
                     </Modal.Footer>
                 </Modal>
             </div>
-        }
-    }
+    };
+}

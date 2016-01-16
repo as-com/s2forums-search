@@ -6,7 +6,7 @@ import SearchPagination from "./SearchPagination"
 import SearchSorting from "./SearchSorting"
 import DocumentTitle from "react-document-title"
 
-var SearchResults = function(props) {
+export default function(props) {
     var resultNodes = props.res.response.hits.hits.map(function(result) {
         return (
             <SearchResult
@@ -42,5 +42,3 @@ var SearchResults = function(props) {
         </div>
     </DocumentTitle>
 }
-
-export default SearchResults

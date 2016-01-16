@@ -14,7 +14,7 @@ export default class ErrorReporter extends React.Component {
         }
         if (__CLIENT__)
             window.onerror = this.handleError;
-    }
+    };
 
     handleError = (message, file, line, column, errorObj) => {
         var stackTrace = "Browser does not support printing stack traces.";
@@ -28,14 +28,14 @@ export default class ErrorReporter extends React.Component {
             column: column,
             stackTrace: stackTrace
         });
-    }
+    };
     close = () => {
         this.setState({ showModal: false });
-    }
+    };
 
     open = () => {
         this.setState({ showModal: true });
-    }
+    };
 
     render() {
         return <Modal bsSize="large" show={this.state.showModal} onHide={this.close}>
@@ -57,5 +57,5 @@ export default class ErrorReporter extends React.Component {
             <Button onClick={this.close}>Close</Button>
           </Modal.Footer>
         </Modal>
-    }
+    };
 }

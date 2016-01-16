@@ -25,13 +25,13 @@ export default class Search extends React.Component {
             success: this.updateSearchResults,
             error: this.updateSearchError
         });
-    }
+    };
     updateSearchResults = (res) => {
         this.setState({response: res, loading: false});
-    }
+    };
     updateSearchError = (xhr, errType, err) => {
         this.setState({error: err, loading: false});
-    }
+    };
     constructor(props) {
         super(props);
         this.state = {
@@ -39,13 +39,13 @@ export default class Search extends React.Component {
             error: "",
             loading: true
         }
-    }
+    };
     componentDidMount() {
         if (this.props.location.query.q)
             this.loadSearchResults();
         else
             this.setState({error: "You must specify a search query", loading: false});
-    }
+    };
     componentDidUpdate = (prevProps) => {
         if (JSON.stringify(this.props.location) != JSON.stringify(prevProps.location)) {
             this.setState({
@@ -55,7 +55,7 @@ export default class Search extends React.Component {
             })
             this.loadSearchResults();
         }
-    }
+    };
     render() {
         return <div>
             <Form size="medium" autoFocus={false} val={this.props.location.query.q} />
@@ -72,5 +72,5 @@ export default class Search extends React.Component {
                 })()
             }
         </div>
-    }
-};
+    };
+}

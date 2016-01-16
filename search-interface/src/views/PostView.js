@@ -19,13 +19,13 @@ export default class PostView extends React.Component {
             success: this.updatePostView,
             error: this.updatePostError
         });
-    }
+    };
     updatePostView = (res) => {
         this.setState({response: res, loading: false});
-    }
+    };
     updatePostError = (xhr, errType, err) => {
         this.setState({error: err, loading: false});
-    }
+    };
     constructor(props) {
         super(props);
         this.state = {
@@ -33,13 +33,13 @@ export default class PostView extends React.Component {
             error: false,
             loading: true
         }
-    }
+    };
     componentDidMount() {
         this.loadPost();
-    }
+    };
     componentDidUpdate() {
         scratchblocks2.parse("pre.blocks");
-    }
+    };
     render() {
         if (this.state.loading) {
             return <Spinner />
@@ -48,5 +48,5 @@ export default class PostView extends React.Component {
             return <ErrorMessage err={this.state.error} />
         }
         return <Post id={this.props.params.id} data={this.state.response.response} />
-    }
+    };
 }

@@ -1,6 +1,5 @@
-import React from "react";
+import React from "react"
 
-var PostTime = function(props) {
+export default function(props) {
     return <time dateTime={props.time}>{new Date(props.time).toLocaleString()}</time>
 }
-export default PostTime;
