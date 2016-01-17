@@ -6,7 +6,7 @@ import LivePost from "../components/LivePost"
 import Spinner from "react-spinner"
 
 if (__CLIENT__)
-    var $ = require("browserify-zepto");
+    var ajax = require("../lib/psAjax");
 
 export default class Live extends React.Component {
     constructor(props) {
@@ -20,7 +20,7 @@ export default class Live extends React.Component {
         this.socket = socketCluster.connect();
         this.channel = this.socket.subscribe("live");
         this.channel.watch(this.addPost);
-        $.ajax({
+        ajax({
             type: "GET",
             url: "/api/lastLive",
             dataType: "json",

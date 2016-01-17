@@ -1,7 +1,7 @@
 {
   "name": "s2forums-search",
   "description": "Search engine for MIT's Scratch Forums.",
-  "version": "0.5.4-beta",
+  "version": "0.5.5-beta",
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
@@ -24,7 +24,6 @@
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
     "body-parser": "^1.14.2",
-    "browserify-zepto": "^1.1.4",
     "elasticsearch": "^10.0.1",
     "express": "^4.13.3",
     "express-cache-response-directive": "^1.0.0",

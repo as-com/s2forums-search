@@ -6,7 +6,7 @@ import {PageHeader} from "react-bootstrap"
 import Spinner from "react-spinner"
 
 if (__CLIENT__)
-    var $ = require("browserify-zepto");
+    var ajax = require("../lib/psAjax");
 
 export default class Search extends React.Component {
     loadSearchResults() {
@@ -17,7 +17,7 @@ export default class Search extends React.Component {
         if (this.props.location.query.sort && this.props.location.query.sort != "relevance") {
             requestData.sort = this.props.location.query.sort;
         }
-        $.ajax({
+        ajax({
             type: "GET",
             url: "/api/search",
             data: requestData,
@@ -27,6 +27,7 @@ export default class Search extends React.Component {
         });
     };
     updateSearchResults = (res) => {
+        console.log(res);
         this.setState({response: res, loading: false});
     };
     updateSearchError = (xhr, errType, err) => {

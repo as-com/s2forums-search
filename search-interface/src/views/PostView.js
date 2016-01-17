@@ -6,12 +6,12 @@ import ErrorMessage from "../components/ErrorMessage"
 
 if (__CLIENT__) {
     var scratchblocks2 = require("../lib/scratchblocks");
-    var $ = require("browserify-zepto");
+    var ajax = require("../lib/psAjax");
 }
 
 export default class PostView extends React.Component {
     loadPost() {
-        $.ajax({
+        ajax({
             type: "GET",
             url: "/api/post",
             data: {id: this.props.params.id},

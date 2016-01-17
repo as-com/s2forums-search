@@ -5,11 +5,11 @@ import Icon from "./Icon"
 import ErrorMessage from "./ErrorMessage"
 
 if (__CLIENT__)
-    var $ = require("browserify-zepto");
+    var ajax = require("../lib/psAjax");
 
 export default class ViewSource extends React.Component {
     loadPost() {
-        $.ajax({
+        ajax({
             type: "GET",
             url: "/api/post/source",
             data: {id: this.props.id, r: this.props.revId},

@@ -7,9 +7,9 @@
  * http://opensource.org/licenses/MIT
  */
 
-/*
- * This copy of scratchblocks2 has been modified for requirejs compatibility.
- */
+ /*
+  * This copy of scratchblocks has been modified to remove the jQuery dependency
+  */
 
 /*
  * The following classes are used:
@@ -84,9 +84,6 @@
  *
  */
 
-if (__CLIENT__)
-    var jQuery = require("browserify-zepto"); // such hacky
-
 String.prototype.startsWith = function(prefix) {
     return this.indexOf(prefix) === 0;
 };
@@ -107,7 +104,8 @@ String.prototype.trimRight = function() {
     return this.replace(/\s+$/, "");
 }
 
-var scratchblocks2 = function ($) {
+
+var scratchblocks2 = function () {
     "use strict";
 
     function assert(bool) {
@@ -1369,41 +1367,44 @@ var scratchblocks2 = function ($) {
         }
 
         // find elements
-        $(selector).each(function (i, el) {
-            var $el = $(el),
-                $container = $('<div>'),
-                code,
-                scripts,
-                html = $el.html();
+        var elements = document.querySelectorAll(selector);
+        for (var i = 0; i < elements.length; i++) {
+          var $el = elements[i],
+              $container = document.createElement('div'),
+              code,
+              scripts,
+              html = $el.innerText;
 
-            html = html.replace(/<br>\s?|\n|\r\n|\r/ig, '\n');
-            code = $('<pre>' + html + '</pre>').text();
-            if (options.inline) {
-                code = code.replace('\n', '');
-            }
+          html = html.replace(/<br>\s?|\n|\r\n|\r/ig, '\n');
+          var $pre = document.createElement('pre');
+          $pre.innerText = html;
+          code = $pre.innerText;
+          if (options.inline) {
+              code = code.replace('\n', '');
+          }
 
-            var scripts = parse_scripts(code);
-
-            $el.text("");
-            $el.append($container);
-            $container.addClass("sb2");
-            if (options.inline) {
-                $container.addClass("inline-block");
-            }
-            for (var i=0; i<scripts.length; i++) {
-                var $script = render_stack(scripts[i]).addClass("script");
-                $container.append($script);
-            }
-        });
+          var scripts = parse_scripts(code);
+          $el.innerHTML = "";
+          $el.appendChild($container);
+          $container.classList.add("sb2");
+          if (options.inline) {
+              $container.classList.add("inline-block");
+          }
+          for (var j in scripts) {
+              var $script = render_stack(scripts[j]);
+              $script.classList.add("script");
+              $container.appendChild($script);
+          }
+        }
     };
 
     function render_stack(script) {
-        var $script = $(document.createElement("div"));
+        var $script = document.createElement("div");
         for (var i=0; i<script.length; i++) {
             var info = script[i];
-            $script.append(render_stack_item(info));
+            $script.appendChild(render_stack_item(info));
             if (info.comment !== undefined) {
-                $script.append(render_comment(info));
+                $script.appendChild(render_comment(info));
             }
         }
         return $script;
@@ -1412,27 +1413,28 @@ var scratchblocks2 = function ($) {
     function render_stack_item(info) {
         switch (info.type) {
             case "cwrap":
-                var $cwrap = render_stack(info.contents).addClass("cwrap")
-                                .addClass(info.category);
-                if (info.shape === "cap") $cwrap.addClass(info.shape)
+                var $cwrap = render_stack(info.contents);
+                $cwrap.classList.add("cwrap", info.category);
+                if (info.shape === "cap") $cwrap.classList.add(info.shape);
                 return $cwrap;
 
             case "cmouth":
-                return render_stack(info.contents).addClass("cmouth")
-                                .addClass(info.category);
-
+                var $cmouth = render_stack(info.contents);
+                $cmouth.classList.add("cmouth", info.category);
+                return $cmouth;
             default:
                 return render_block(info);
         }
     }
 
     function render_comment(info) {
-        var $comment = $(document.createElement("div")).addClass("comment")
-                .append($(document.createElement("div"))
-                .append(document.createTextNode(info.comment.trim() || " ")));
+        var $comment = document.createElement("div");
+        $comment.classList.add("comment");
+        var $message = document.createElement("div");
+        $message.appendChild(document.createTextNode(info.comment.trim() || " "));
+        $comment.appendChild($message);
         if (info.shape) {
-            $comment.addClass("attached");
-            $comment.addClass("to-" + info.shape);
+            $comment.classList.add("attached", "to-" + info.shape);
         }
         return $comment;
     }
@@ -1441,31 +1443,35 @@ var scratchblocks2 = function ($) {
         if (!info) return;
 
         // make DOM element
-        var $block = $(document.createElement("div"));
-        $block.addClass(info.shape);
-        $block.addClass(info.category);
-        if (info.flag) $block.addClass(info.flag);
+        var $block = document.createElement("div");
+        $block.classList.add(info.shape, info.category);
+        if (info.flag) {
+            info.flag.split(" ").forEach(function(flag) {
+                $block.classList.add(flag);
+            });
+        }
 
         // color insert?
         if (info.shape === "color") {
-            $block.css({"background-color": info.pieces[0]});
-            $block.text(" ");
+            $block.style["background-color"] = info.pieces[0];
+            $block.innerText = " ";
             return $block;
         }
 
         // ringify?
         var $ring;
         if (info.is_ringed) {
-            $ring = $(document.createElement("div")).addClass("ring-inner")
-                               .addClass(info.shape).append($block);
+            $ring = document.createElement("div");
+            $ring.classList.add("ring-inner", info.shape);
+            $ring.appendChild($block);
         }
         if (info.flag === "ring") {
-            $block.addClass("ring");
+            $block.classList.add("ring");
         }
 
         // empty?
         if (!info.pieces.length && info.flag !== "cend") {
-            $block.addClass("empty");
+            $block.classList.add("empty");
             return $ring || $block;
         }
 
@@ -1473,21 +1479,24 @@ var scratchblocks2 = function ($) {
         for (var i=0; i<info.pieces.length; i++) {
             var piece = info.pieces[i];
             if (typeof piece === "object") {
-                $block.append(render_block(piece));
+                $block.appendChild(render_block(piece));
             } else if (piece === "@" && info.image_replacement) {
-                var $image = $("<span>")
-                $image.addClass(info.image_replacement);
-                var $span = $("<span>")
-                $span.text(image_text[info.image_replacement]);
-                $image.append($span);
-                $block.append($image);
+                var $image = document.createElement("span");
+                $image.classList.add(info.image_replacement);
+                var $span = document.createElement("span");
+                if (image_text[info.image_replacement]) {
+                    $span.innerText = image_text[info.image_replacement];
+                }
+                $image.appendChild($span);
+                $block.appendChild($image);
             } else if (/^[▶◀▸◂+]$/.test(piece)) {
-                $block.append(
-                    $(document.createElement("span")).addClass("arrow")
-                        .append(document.createTextNode(piece)));
+                var $span = document.createElement("span");
+                $span.classList.add("arrow");
+                $span.appendChild(document.createTextNode(piece));
+                $block.appendChild($span);
             } else {
                 if (!piece) piece = " ";
-                $block.append(document.createTextNode(piece));
+                $block.appendChild(document.createTextNode(piece));
             }
         }
 
@@ -1495,6 +1504,6 @@ var scratchblocks2 = function ($) {
     }
 
     return sb2; // export the module
-}(jQuery);
+}();
 
 module.exports = scratchblocks2;
