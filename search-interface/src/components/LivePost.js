@@ -3,6 +3,7 @@ import {Link} from "react-router"
 import {Panel} from "react-bootstrap"
 import PostTime from "./PostTime"
 import UserAvatar from "./UserAvatar"
+import sanitizeHTML from "../lib/sanitizeHTML"
 
 if (__CLIENT__) {
     var scratchblocks2 = require("../lib/scratchblocks");
@@ -25,7 +26,7 @@ export default class LivePost extends React.Component {
             </Link>
         </h3>
         return <Panel header={title} className="animated bounceIn resultPanel" id={"p" + this.props.id}>
-                    <div dangerouslySetInnerHTML={createResultMarkup(this.props.html)}></div>
+                    <div dangerouslySetInnerHTML={createResultMarkup(sanitizeHTML(this.props.html))}></div>
                 </Panel>
     };
 }

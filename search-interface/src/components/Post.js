@@ -7,6 +7,7 @@ import UserAvatar from "./UserAvatar"
 import Revision from "./Revision"
 import PostTime from "./PostTime"
 import Icon from "./Icon"
+import sanitizeHTML from "../lib/sanitizeHTML"
 
 function createDangerousMarkup(text) {
     return {
@@ -16,7 +17,7 @@ function createDangerousMarkup(text) {
 
 export default function(props) {
     var revisionNodes = props.data._source.revisions.map(function(revision, index) {
-          return <Revision key={index} revId={index} author={revision.author} time={revision.time} id={props.id}><div dangerouslySetInnerHTML={createDangerousMarkup(revision.html || "<p class='text-muted'>Post empty</p>")}></div></Revision>
+          return <Revision key={index} revId={index} author={revision.author} time={revision.time} id={props.id}><div dangerouslySetInnerHTML={createDangerousMarkup(sanitizeHTML(revision.html) || "<p class='text-muted'>Post empty</p>")}></div></Revision>
         });
     return <DocumentTitle title={`${props.data._source.author} on ${props.data._source.topic} - Scratch Forums Search`}>
         <div>

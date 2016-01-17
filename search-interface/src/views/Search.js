@@ -27,7 +27,6 @@ export default class Search extends React.Component {
         });
     };
     updateSearchResults = (res) => {
-        console.log(res);
         this.setState({response: res, loading: false});
     };
     updateSearchError = (xhr, errType, err) => {

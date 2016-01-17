@@ -296,7 +296,7 @@ app.get("*", function(req, res) {
 			);
 
 			// this.type = "text/html";
-			res.send(Transmit.injectIntoMarkup(template, reactData, [`${webserver}/dist/client.js?v=0.5.5`]));
+			res.send(Transmit.injectIntoMarkup(template, reactData, [`${webserver}/dist/client.js?v=0.5.6`]));
 		}).catch(function(e) {
 			res.status(500).send("<img src='https://i.imgur.com/M11XaEq.png'><h1>Server error</h1><p>" + e.stack + "</p>");
 		});
