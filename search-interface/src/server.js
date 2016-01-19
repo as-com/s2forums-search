@@ -4,10 +4,9 @@ import bodyParser from "body-parser"
 import socketClusterServer from "socketcluster-server"
 
 import React from "react"
-import ReactDOM from "react-dom/server"
+import {renderToString} from "react-dom/server"
 import {RoutingContext, match} from "react-router"
 import {createLocation} from "history"
-import Transmit from "react-transmit"
 import elasticsearch from "elasticsearch"
 import moment from "moment-timezone"
 import memwatch from "memwatch-next"
@@ -47,6 +46,11 @@ var esclient = new elasticsearch.Client({
 app.use(express.static("static"));
 app.use(bodyParser.json());
 app.use(cacheResponseDirective());
+
+app.use(function(err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send("<img src='https://i.imgur.com/M11XaEq.png'><h1>Server error</h1><p>" + e.stack + "</p>");
+});
 
 function normalizeTime(str, id) {
 	if (id < 131141) {
@@ -264,42 +268,33 @@ app.get("*", function(req, res) {
 			return;
 		}
 
-		Transmit.renderToString(RoutingContext, renderProps).then(({
-			reactString, reactData
-		}) => {
-			let template = (
-				`<!doctype html>
-<html lang="en-us">
+		let reactString = renderToString(<RoutingContext {...renderProps} />);
+		res.send(`<!DOCTYPE html>
+<html>
 	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>${DocumentTitle.rewind()}</title>
-		<link rel="shortcut icon" href="/favicon.ico" />
-		<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/cerulean/bootstrap.min.css" rel="stylesheet" integrity="sha256-Ucf/ylcKTNevYP6l7VNUhGLDRZPQs1+LsbbxuzMxUJM= sha512-FW2XqnqMwERwg0LplG7D64h8zA1BsxvxrDseWpHLq8Dg8kOBmLs19XNa9oAajN/ToJRRklfDJ398sOU+7LcjZA==" crossorigin="anonymous" />
-		<link href="/css/style.css?v=0.5.3" rel="stylesheet" />
-	</head>
-	<body>
-		<div id="react-root">${reactString}</div><script>var currentPostCount = ${JSON.stringify(global.getDocCount())}</script>
-		<script>
-		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>${DocumentTitle.rewind()}</title>
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/cerulean/bootstrap.min.css" rel="stylesheet" integrity="sha256-Ucf/ylcKTNevYP6l7VNUhGLDRZPQs1+LsbbxuzMxUJM= sha512-FW2XqnqMwERwg0LplG7D64h8zA1BsxvxrDseWpHLq8Dg8kOBmLs19XNa9oAajN/ToJRRklfDJ398sOU+7LcjZA==" crossorigin="anonymous" />
+	<link href="/css/style.css?v=0.5.3" rel="stylesheet" />
+</head>
+<body>
+	<div id="react-root">${reactString}</div>
+	<script>var currentPostCount = ${JSON.stringify(global.getDocCount())}</script>
+	<script src="/dist/client.js?v=0.5.7"></script>
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-		  ga('create', 'UA-20687955-18', 'auto');
-		  ga('send', 'pageview');
+	  ga('create', 'UA-20687955-18', 'auto');
+	  ga('send', 'pageview');
 
-		</script>
-	</body>
-</html>`
-			);
-
-			// this.type = "text/html";
-			res.send(Transmit.injectIntoMarkup(template, reactData, [`${webserver}/dist/client.js?v=0.5.6`]));
-		}).catch(function(e) {
-			res.status(500).send("<img src='https://i.imgur.com/M11XaEq.png'><h1>Server error</h1><p>" + e.stack + "</p>");
-		});
+	</script>
+</body>
+</html>`);
 	});
 
 });
