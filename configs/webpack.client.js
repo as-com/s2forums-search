@@ -1,17 +1,24 @@
 var webpack = require("webpack");
 var path = require("path");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var AssetsPlugin = require('assets-webpack-plugin');
+var assetsPluginInstance = new AssetsPlugin({
+	path: path.join(__dirname, '../dist')
+});
+var autoprefixer = require('autoprefixer');
+var cssnano = require('cssnano');
 
 module.exports = {
 	target: "web",
 	cache: false,
 	context: __dirname,
 	debug: false,
-	devtool: false,
+	devtool: "source-map",
 	entry: ["../src/client"],
 	output: {
 		path: path.join(__dirname, "../static/dist"),
-		filename: "client.js",
-		chunkFilename: "[name].[id].js",
+		filename: "client.[hash].js",
+		chunkFilename: "[name].[id].[hash].js",
 	},
 	plugins: [
 		new webpack.DefinePlugin({
@@ -35,15 +42,28 @@ module.exports = {
 			},
 			output: {
 				screw_ie8: true,
-				//! Scratch Forums Search v0.4.2-beta | (c) Andrew Sun | https://github.com/as-com/s2forums-search
-				preamble: "//! Scratch Forums Search v0.5.4-beta | (c) Andrew Sun | https://github.com/as-com/s2forums-search"
+				preamble: "//! Scratch Forums Search v0.6.1-beta | (c) Andrew Sun | https://github.com/as-com/s2forums-search"
 			}
-		})
+		}),
+		new ExtractTextPlugin("client.[contenthash].css"),
+		assetsPluginInstance
 	],
 	module: {
 		loaders: [{
 			test: /\.json$/,
 			loaders: ["json"]
+		}, {
+			test: /\.css$/,
+			loader: ExtractTextPlugin.extract("style-loader", "css-loader?sourceMap!postcss-loader")
+		}, {
+			test: /\.less$/,
+			loader: ExtractTextPlugin.extract("style-loader", "css-loader!postcss-loader!less-loader?sourceMap")
+		}, {
+			test: /\.scss$/,
+			loader: ExtractTextPlugin.extract("style-loader", "css-loader!postcss-loader!sass-loader?sourceMap")
+		}, {
+			test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+			loader: 'file-loader'
 		}],
 		postLoaders: [{
 			test: /\.js$/,
@@ -63,5 +83,10 @@ module.exports = {
 	node: {
 		__dirname: true,
 		fs: 'empty'
+	},
+	postcss: function() {
+		return [autoprefixer({
+			browsers: ["last 2 versions"]
+		}), cssnano()];
 	}
 };

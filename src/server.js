@@ -3,6 +3,8 @@ import express from "express"
 import http from "http"
 import bodyParser from "body-parser"
 import socketClusterServer from "socketcluster-server"
+import fs from "fs"
+import path from "path"
 
 import React from "react"
 import {renderToString} from "react-dom/server"
@@ -255,6 +257,8 @@ app.get("/api/lastLive", function(req, res) {
 	res.json(livePosts);
 });
 
+var assetURLs = JSON.parse(fs.readFileSync("dist/webpack-assets.json"));
+
 app.get("*", function(req, res) {
 	const location = createLocation(req.path);
 	const webserver = __PRODUCTION__ ? "" : `//${hostname}:8080`;
@@ -280,12 +284,12 @@ app.get("*", function(req, res) {
 	<title>${DocumentTitle.rewind()}</title>
 	<link rel="shortcut icon" href="/favicon.ico" />
 	<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/cerulean/bootstrap.min.css" rel="stylesheet" integrity="sha256-Ucf/ylcKTNevYP6l7VNUhGLDRZPQs1+LsbbxuzMxUJM= sha512-FW2XqnqMwERwg0LplG7D64h8zA1BsxvxrDseWpHLq8Dg8kOBmLs19XNa9oAajN/ToJRRklfDJ398sOU+7LcjZA==" crossorigin="anonymous" />
-	<link href="/css/style.css?v=0.5.3" rel="stylesheet" />
+	<link href="${assetURLs.main.css}" rel="stylesheet" />
 </head>
 <body>
 	<div id="react-root">${reactString}</div>
 	<script>var currentPostCount = ${JSON.stringify(global.getDocCount())}</script>
-	<script src="/dist/client.js?v=0.6.0"></script>
+	<script src="${assetURLs.main.js}"></script>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -312,10 +316,15 @@ server.listen(port, () => {
 
 if (__DEV__) {
 	if (module.hot) {
-		console.log("[HMR] Server listening");
+		console.log("[HMR] Waiting for server-side updates");
 		module.hot.accept("containers/routes", () => {
 			routes = require("containers/routes");
 		});
+		module.hot.addStatusHandler((status) => {
+				if (status === "abort") {
+					setTimeout(() => process.exit(0), 0);
+				}
+			});
 	}
 }
 

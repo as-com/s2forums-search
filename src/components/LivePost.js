@@ -9,6 +9,10 @@ if (__CLIENT__) {
     var scratchblocks2 = require("../lib/scratchblocks");
 }
 
+require("../css/bbcode.css");
+require("../css/scratchblocks.css");
+require("../css/pygments.css");
+
 function createResultMarkup(text) {
     return {
         __html: text

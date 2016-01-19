@@ -9,6 +9,8 @@ if (__CLIENT__) {
     var ajax = require("../lib/psAjax");
 }
 
+require("../css/scratchblocks.css");
+
 export default class PostView extends React.Component {
     loadPost() {
         ajax({

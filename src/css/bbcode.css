@@ -1,0 +1,23 @@
+.bb-underline {
+	text-decoration: underline;
+}
+.bb-italic {
+	font-style: italic;
+}
+.bb-bold {
+	font-weight: bold;
+}
+.bb-strikethrough {
+	text-decoration: line-through;
+}
+.bb-big {
+	font-size: 1.5em;
+}
+.bb-small {
+	font-size: 0.75em;
+}
+
+.bb-quote-author {
+	font-weight: bold;
+	margin-bottom: 6px;
+}

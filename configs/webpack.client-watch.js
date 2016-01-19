@@ -1,12 +1,16 @@
 var webpack = require("webpack");
 var config = require("./webpack.client.js");
+var path = require("path");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var AssetsPlugin = require('assets-webpack-plugin');
+var assetsPluginInstance = new AssetsPlugin({path: path.join(__dirname, '../dist')});
 
 var hostname = process.env.HOSTNAME || "localhost";
 var port = 8080;
 
 config.cache = true;
 config.debug = true;
-config.devtool = "cheap-module-eval-source-map";
+config.devtool = "source-map";
 
 config.entry.unshift(
 	"webpack-dev-server/client?http://" + hostname + ":" + port,
@@ -20,7 +24,9 @@ config.output.hotUpdateChunkFilename = "update/[hash]/[id].update.js";
 config.plugins = [
 	new webpack.DefinePlugin({__CLIENT__: true, __SERVER__: false, __PRODUCTION__: false, __DEV__: true}),
 	new webpack.HotModuleReplacementPlugin(),
-	new webpack.NoErrorsPlugin()
+	new webpack.NoErrorsPlugin(),
+	new ExtractTextPlugin("client.[contenthash].css"),
+	assetsPluginInstance
 ];
 
 config.module.postLoaders = [
@@ -32,8 +38,8 @@ config.devServer = {
 	hot:         true,
 	inline:      false,
 	lazy:        false,
-	quiet:       true,
-	noInfo:      true,
+	quiet:       false,
+	noInfo:      false,
 	headers:     {"Access-Control-Allow-Origin": "*"},
 	stats:       {colors: true},
 	host:        process.env.HOSTNAME || "localhost"

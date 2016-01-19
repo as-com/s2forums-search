@@ -9,6 +9,9 @@ import PostTime from "./PostTime"
 import Icon from "./Icon"
 import sanitizeHTML from "../lib/sanitizeHTML"
 
+require("../css/bbcode.css");
+require("../css/pygments.css");
+
 function createDangerousMarkup(text) {
     return {
         __html: text

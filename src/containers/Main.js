@@ -5,6 +5,8 @@ import ErrorReporter from "../components/ErrorReporter"
 import NoScriptWarning from "../components/NoScriptWarning"
 import DocumentTitle from "react-document-title"
 
+require("../css/main.scss");
+
 export default function(props) {
 	return <DocumentTitle title='Scratch Forums Search'>
 		<div>

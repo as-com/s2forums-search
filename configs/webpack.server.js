@@ -40,6 +40,15 @@ module.exports = {
 		loaders: [{
 			test: /\.json$/,
 			loaders: ["json"]
+		}, {
+			test: /\.css$/,
+			loader: "null-loader"
+		}, {
+			test: /\.less$/,
+			loader: "null-loader"
+		}, {
+			test: /\.scss$/,
+			loader: "null-loader"
 		}],
 		postLoaders: [{
 			test: /\.js$/,
