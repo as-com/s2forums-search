@@ -8,6 +8,6 @@ npm run watch
 To run in production mode:
 ```
 npm install
-NODE_ENV=production npm run build
-NODE_ENV=production npm run start
+npm run build
+npm run start
 ```
