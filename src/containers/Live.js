@@ -3,7 +3,7 @@ import {PageHeader} from "react-bootstrap"
 import socketCluster from "socketcluster-client"
 import DocumentTitle from "react-document-title"
 import LivePost from "../components/LivePost"
-import Spinner from "react-spinner"
+import Spinner from "../components/Spinner.js"
 
 if (__CLIENT__)
     var ajax = require("../lib/psAjax");

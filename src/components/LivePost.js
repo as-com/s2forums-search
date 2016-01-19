@@ -12,6 +12,7 @@ if (__CLIENT__) {
 require("../css/bbcode.css");
 require("../css/scratchblocks.css");
 require("../css/pygments.css");
+require("../css/animate-bounceIn.css");
 
 function createResultMarkup(text) {
     return {

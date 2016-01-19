@@ -1,6 +1,6 @@
 import React from "react"
 import {Modal, Button} from "react-bootstrap"
-import Spinner from "react-spinner"
+import Spinner from "./Spinner.js"
 import Icon from "./Icon"
 import ErrorMessage from "./ErrorMessage"
 

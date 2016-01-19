@@ -1,7 +1,7 @@
 import React from "react"
 import Post from "../components/Post"
 import {PageHeader} from "react-bootstrap"
-import Spinner from "react-spinner"
+import Spinner from "../components/Spinner.js"
 import ErrorMessage from "../components/ErrorMessage"
 
 if (__CLIENT__) {

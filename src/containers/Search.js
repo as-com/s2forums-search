@@ -3,7 +3,7 @@ import SearchResults from "../components/SearchResults"
 import ErrorMessage from "../components/ErrorMessage"
 import Form from "../components/Form"
 import {PageHeader} from "react-bootstrap"
-import Spinner from "react-spinner"
+import Spinner from "../components/Spinner.js"
 
 if (__CLIENT__)
     var ajax = require("../lib/psAjax");

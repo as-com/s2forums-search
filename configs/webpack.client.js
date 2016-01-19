@@ -43,7 +43,7 @@ module.exports = {
 			},
 			output: {
 				screw_ie8: true,
-				preamble: "//! Scratch Forums Search v0.6.1-beta | (c) Andrew Sun | https://github.com/as-com/s2forums-search"
+				preamble: "//! Scratch Forums Search v0.6.3-beta | (c) Andrew Sun | https://github.com/as-com/s2forums-search"
 			}
 		}),
 		new ExtractTextPlugin("client.[contenthash].css"),
