@@ -65,6 +65,11 @@ function normalizeTime(str, id) {
 	}
 }
 
+// Precompile this monstrous regex for better performance
+
+var luceneRegex = /AND|OR|NOT|[\w\.]:(?:[\("].*?[\)"]|\w+?|[\[{]\S+? TO \S+?[\]}]|[><])|".*?"|\\(?:[\+\-\=><\!\(\)\{\}\[\]\^"~\*\?\:\\\/]|(\&\&)|(\|\|))|\w+?[\?\*]|\w+?~|\w\^\d|\s[\+-]\w/; // superfluous newline because Atom screws up syntax highlighting
+// Regex matching regexes to prevent people from clobbering database
+var regexRegex = /((?![\S"]).|^)([^"\s]+)(?![\S"])/;
 app.get("/api/search", function(req, res) {
 	// Cache for 5 minutes
 	res.cacheControl({
@@ -84,6 +89,11 @@ app.get("/api/search", function(req, res) {
 			error: "Empty query"
 		});
 		return;
+	}
+
+	// Detect Lucene query syntax
+	if (!regexRegex.test(query) && luceneRegex.test(query)) {
+		// TODO: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
 	}
 
 	var queryBody = {
