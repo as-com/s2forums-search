@@ -18,6 +18,7 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, "../static/dist"),
 		filename: "client.[hash].js",
+		publicPath: "/dist/",
 		chunkFilename: "[name].[id].[hash].js",
 	},
 	plugins: [
