@@ -86,8 +86,16 @@ module.exports = {
 		fs: 'empty'
 	},
 	postcss: function() {
-		return [autoprefixer({
-			browsers: ["last 2 versions"]
-		}), cssnano()];
+		return [cssnano({
+			safe: true,
+			autoprefixer: {
+				add: true,
+				remove: true,
+				browsers: ['last 2 versions']
+			},
+			discardComments: {
+				removeAll: true
+			}
+		})];
 	}
 };
