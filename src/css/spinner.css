@@ -8,8 +8,6 @@
 }
 
 .react-spinner_bar {
-  -webkit-animation: react-spinner_spin 1.2s linear infinite;
-  -moz-animation: react-spinner_spin 1.2s linear infinite;
   animation: react-spinner_spin 1.2s linear infinite;
   border-radius: 5px;
   background-color: black;

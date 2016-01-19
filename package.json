@@ -1,7 +1,7 @@
 {
   "name": "s2forums-search",
   "description": "Search engine for MIT's Scratch Forums.",
-  "version": "0.6.3-beta",
+  "version": "0.6.4-beta",
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
