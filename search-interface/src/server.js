@@ -1,3 +1,4 @@
+import babelPolyfill from "babel-polyfill"
 import express from "express"
 import http from "http"
 import bodyParser from "body-parser"
@@ -14,7 +15,7 @@ import cacheResponseDirective from "express-cache-response-directive"
 import DocumentTitle from "react-document-title"
 import escapeHTML from "lib/escapeHTML"
 
-import routes from "views/routes"
+import routesContainer from "containers/routes"
 
 memwatch.on('leak', function(info) {
 	console.warn("Memory leak detected: " + info);
@@ -30,6 +31,8 @@ setInterval(function() {
 var app = express();
 const hostname = process.env.HOSTNAME || "localhost";
 const port = process.env.PORT || 8000;
+
+let routes = routesContainer;
 var server = http.createServer(app);
 var scServer = socketClusterServer.attach(server);
 
@@ -254,7 +257,7 @@ app.get("/api/lastLive", function(req, res) {
 
 app.get("*", function(req, res) {
 	const location = createLocation(req.path);
-	const webserver = process.env.NODE_ENV === "production" ? "" : "//" + hostname + ":8080";
+	const webserver = __PRODUCTION__ ? "" : `//${hostname}:8080`;
 	match({
 		routes, location: req.url
 	}, (error, redirectLocation, renderProps) => {
@@ -282,7 +285,7 @@ app.get("*", function(req, res) {
 <body>
 	<div id="react-root">${reactString}</div>
 	<script>var currentPostCount = ${JSON.stringify(global.getDocCount())}</script>
-	<script src="/dist/client.js?v=0.5.7"></script>
+	<script src="/dist/client.js?v=0.6.0"></script>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -306,6 +309,15 @@ server.listen(port, () => {
 	console.info("==> ✅  Server is listening");
 	console.info("==> Go to http://%s:%s", hostname, port);
 });
+
+if (__DEV__) {
+	if (module.hot) {
+		console.log("[HMR] Server listening");
+		module.hot.accept("containers/routes", () => {
+			routes = require("containers/routes");
+		});
+	}
+}
 
 esclient.ping({
 	requestTimeout: 30000,

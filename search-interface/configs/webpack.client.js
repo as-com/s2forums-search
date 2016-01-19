@@ -5,18 +5,20 @@ module.exports = {
 	target: "web",
 	cache: false,
 	context: __dirname,
+	debug: false,
 	devtool: false,
-	entry: ["./src/client"],
+	entry: ["../src/client"],
 	output: {
-		path: path.join(__dirname, "static/dist"),
+		path: path.join(__dirname, "../static/dist"),
 		filename: "client.js",
 		chunkFilename: "[name].[id].js",
-		publicPath: "dist/"
 	},
 	plugins: [
 		new webpack.DefinePlugin({
 			__CLIENT__: true,
-			__SERVER__: false
+			__SERVER__: false,
+			__PRODUCTION__: true,
+			__DEV__: false
 		}),
 		new webpack.DefinePlugin({
 			"process.env": {
@@ -26,10 +28,11 @@ module.exports = {
 		new webpack.optimize.DedupePlugin(),
 		new webpack.optimize.OccurenceOrderPlugin(),
 		new webpack.optimize.UglifyJsPlugin({
-		    compress: {
-		        unsafe: true,
-				screw_ie8: true
-		    },
+			compress: {
+				unsafe: true,
+				screw_ie8: true,
+				warnings: false
+			},
 			output: {
 				screw_ie8: true,
 				//! Scratch Forums Search v0.4.2-beta | (c) Andrew Sun | https://github.com/as-com/s2forums-search
@@ -41,18 +44,15 @@ module.exports = {
 		loaders: [{
 			test: /\.json$/,
 			loaders: ["json"]
-		}, {
+		}],
+		postLoaders: [{
 			test: /\.js$/,
-			loaders: ["babel?cacheDirectory&presets[]=es2015&presets[]=react&presets[]=stage-0"],
+			loaders: ["babel?presets[]=es2015&presets[]=stage-0&presets[]=react"],
 			exclude: /node_modules/
 		}],
-		postLoaders: [],
 		noParse: /\.min\.js/
 	},
 	resolve: {
-		alias: {
-			react: path.join(__dirname, "node_modules/react")
-		},
 		modulesDirectories: [
 			"src",
 			"node_modules",

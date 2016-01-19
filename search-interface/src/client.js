@@ -1,14 +1,14 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import {Router} from "react-router"
-import routes from "views/routes"
+import routesContainer from "containers/routes"
 import {createHistory} from "history"
 
 /**
  * Fire-up React Router.
  */
 const reactRoot = window.document.getElementById("react-root");
-ReactDOM.render(<Router history={createHistory()}>{routes}</Router>, reactRoot);
+ReactDOM.render(<Router history={createHistory()}>{routesContainer}</Router>, reactRoot);
 
 /**
  * Detect whether the server-side render has been discarded due to an invalid checksum.
