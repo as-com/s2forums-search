@@ -1,12 +1,13 @@
-import Main from "./Main"
-import About from "./About"
-import Home from "./Home"
-import NotFound from "./NotFound"
-import PostView from "./PostView"
-import Search from "./Search"
-import Live from "./Live"
-import React from "react"
-import {Router, Route, IndexRoute, NotFoundRoute} from "react-router"
+var Main = require("./Main");
+var About = require("./About");
+var Home = require("./Home");
+var NotFound = require("./NotFound");
+var PostView = require("./PostView");
+var Search = require("./Search");
+var Live = require("./Live");
+var React = require("react");
+var Route = require("react-router/lib/Route");
+var IndexRoute = require("react-router/lib/IndexRoute");
 
 /**
 * The React Router 1.0 routes for both the server and the client.

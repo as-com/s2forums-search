@@ -1,5 +1,5 @@
-import React from "react"
+var React = require("react");
 
-export default function(props) {
+module.exports = function(props) {
     return <a href={`https://scratch.mit.edu/users/${props.username}/`} target="_blank">{props.username}</a>
 }

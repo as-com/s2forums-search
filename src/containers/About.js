@@ -1,8 +1,8 @@
-import React from "react"
-import {PageHeader} from "react-bootstrap"
-import DocumentTitle from "react-document-title"
+var React = require("react");
+var PageHeader = require("react-bootstrap/lib/PageHeader");
+var DocumentTitle = require("react-document-title");
 
-export default function() {
+module.exports = function() {
     return <DocumentTitle title="About - Scratch Forums Search">
         <div>
             <PageHeader>About</PageHeader>

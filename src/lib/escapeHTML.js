@@ -7,7 +7,7 @@ var entityMap = {
 	"/": '&#x2F;'
 };
 
-export default function (string) {
+module.exports = function (string) {
 	return String(string).replace(/[&<>"'\/]/g, function(s) {
 		return entityMap[s];
 	});

@@ -5,7 +5,7 @@ var utils = {
 	// },
 	// lastArgumentCallback: function(args, invoke) {
 	// 	var lastArgument = args[args.length - 1];
-    //
+	//
 	// 	if (utils.isFunction(lastArgument)) {
 	// 		if (invoke) {
 	// 			lastArgument();
@@ -61,11 +61,11 @@ module.exports = function(url, settings) {
 			Math.floor(Math.random() * 9e9);
 	}
 
-    if (settings.type == "GET") {
-        for (var prop in settings.data) {
-            settings.url += (~settings.url.indexOf("?") ? "&" : "?") + prop + "=" + encodeURIComponent(settings.data[prop]);
-        }
-    }
+	if (settings.type == "GET") {
+		for (var prop in settings.data) {
+			settings.url += (~settings.url.indexOf("?") ? "&" : "?") + prop + "=" + encodeURIComponent(settings.data[prop]);
+		}
+	}
 
 	var success = function(data, xhr, settings) {
 		var status = 'success';
@@ -101,7 +101,7 @@ module.exports = function(url, settings) {
 					success(result, xhr, settings);
 					return;
 				} catch (e) {
-                    throw e;
+					throw e;
 				}
 			}
 

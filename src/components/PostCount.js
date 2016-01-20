@@ -1,7 +1,7 @@
-import React from "react"
-import socketCluster from "socketcluster-client"
+var React = require("react");
+var socketCluster = require("socketcluster-client");
 
-export default class PostCount extends React.Component {
+module.exports = class PostCount extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

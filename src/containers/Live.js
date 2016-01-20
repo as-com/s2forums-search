@@ -1,9 +1,9 @@
-import React from "react"
-import {PageHeader} from "react-bootstrap"
-import socketCluster from "socketcluster-client"
-import DocumentTitle from "react-document-title"
-import LivePost from "../components/LivePost"
-import Spinner from "../components/Spinner.js"
+var React = require("react");
+var PageHeader = require("react-bootstrap/lib/PageHeader");
+var socketCluster = require("socketcluster-client");
+var DocumentTitle = require("react-document-title");
+var LivePost = require("../components/LivePost");
+var Spinner = require("../components/Spinner.js");
 
 if (__CLIENT__)
     var ajax = require("../lib/psAjax");

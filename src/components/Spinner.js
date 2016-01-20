@@ -1,8 +1,8 @@
-import React from "react"
+var React = require("react");
 
-import "../css/spinner.css"
+require("../css/spinner.css");
 
-export default React.createClass({
+module.exports = React.createClass({
     render: function() {
         var bars = [];
         var props = this.props;

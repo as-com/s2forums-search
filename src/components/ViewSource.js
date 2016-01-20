@@ -1,13 +1,14 @@
-import React from "react"
-import {Modal, Button} from "react-bootstrap"
-import Spinner from "./Spinner.js"
-import Icon from "./Icon"
-import ErrorMessage from "./ErrorMessage"
+var React = require("react");
+var Modal = require("react-bootstrap/lib/Modal");
+var Button = require("react-bootstrap/lib/Button");
+var Spinner = require("./Spinner.js");
+var Icon = require("./Icon");
+var ErrorMessage = require("./ErrorMessage");
 
 if (__CLIENT__)
     var ajax = require("../lib/psAjax");
 
-export default class ViewSource extends React.Component {
+module.exports = class ViewSource extends React.Component {
     loadPost() {
         ajax({
             type: "GET",

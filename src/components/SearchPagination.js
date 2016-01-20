@@ -1,8 +1,8 @@
-import React from "react";
-import {Pagination} from "react-bootstrap"
-import {History} from "react-router"
+var React = require("react");
+var Pagination = require("react-bootstrap/lib/Pagination");
+var History = require("react-router/lib/History");
 
-export default React.createClass({
+module.export = React.createClass({
     mixins: [History],
     handleSelect: function(e, selected) {
         this.history.pushState(this.state, "/search", {

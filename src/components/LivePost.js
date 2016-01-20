@@ -1,9 +1,9 @@
-import React from "react"
-import {Link} from "react-router"
-import {Panel} from "react-bootstrap"
-import PostTime from "./PostTime"
-import UserAvatar from "./UserAvatar"
-import sanitizeHTML from "../lib/sanitizeHTML"
+var React = require("react");
+var Link = require("react-router/lib/Link");
+var Panel = require("react-bootstrap/lib/Panel");
+var PostTime = require("./PostTime");
+var UserAvatar = require("./UserAvatar");
+var sanitizeHTML = require("../lib/sanitizeHTML");
 
 if (__CLIENT__) {
     var scratchblocks2 = require("../lib/scratchblocks");
@@ -20,7 +20,7 @@ function createResultMarkup(text) {
     }
 }
 
-export default class LivePost extends React.Component {
+module.exports = class LivePost extends React.Component {
     componentDidMount = () => {
         scratchblocks2.parse(`#p${this.props.id} pre.blocks`);
     };

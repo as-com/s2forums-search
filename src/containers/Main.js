@@ -1,13 +1,13 @@
-import React from "react"
-import Header from "../components/Header"
-import Footer from "../components/Footer"
-import ErrorReporter from "../components/ErrorReporter"
-import NoScriptWarning from "../components/NoScriptWarning"
-import DocumentTitle from "react-document-title"
+var React = require("react");
+var Header = require("../components/Header");
+var Footer = require("../components/Footer");
+var ErrorReporter = require("../components/ErrorReporter");
+var NoScriptWarning = require("../components/NoScriptWarning");
+var DocumentTitle = require("react-document-title");
 
 require("../css/main.scss");
 
-export default function(props) {
+module.exports = function(props) {
 	return <DocumentTitle title='Scratch Forums Search'>
 		<div>
 			<ErrorReporter />

@@ -1,9 +1,11 @@
-import React from "react"
-import {History} from "react-router"
-import {Navbar, Input, Button} from "react-bootstrap"
-import Icon from "./Icon"
+var React = require("react");
+var History = require("react-router/lib/History");
+var Navbar = require("react-bootstrap/lib/Navbar");
+var Input = require("react-bootstrap/lib/Input");
+var Button = require("react-bootstrap/lib/Button");
+var Icon = require("./Icon");
 
-export default React.createClass({
+module.exports = React.createClass({
     mixins: [History],
     getInitialState: function() {
         return {search: ""}

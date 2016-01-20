@@ -1,7 +1,8 @@
-import React from "react"
-import {Link} from "react-router"
-import {Dropdown, MenuItem} from "react-bootstrap"
-import {LinkContainer} from "react-router-bootstrap"
+var React = require("react");
+var Link = require("react-router/lib/Link");
+var Dropdown = require("react-bootstrap/lib/Dropdown");
+var MenuItem = require("react-bootstrap/lib/MenuItem");
+var {LinkContainer} = require("react-router-bootstrap");
 
 const sortTerms = {
     "relevance": "Relevance",
@@ -9,7 +10,7 @@ const sortTerms = {
     "date-asc": "Date (oldest first)"
 };
 
-export default function(props) {
+module.exports = function(props) {
     return <Dropdown pullRight className="pull-right sorting-selector" bsSize="small" id="search-sort">
         <Dropdown.Toggle>
             <span className="text-muted">Sort by: </span><b>{sortTerms[props.sort]}</b>

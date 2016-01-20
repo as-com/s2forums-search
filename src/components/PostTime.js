@@ -1,5 +1,5 @@
-import React from "react"
+var React = require("react");
 
-export default function(props) {
+module.exports = function(props) {
     return <time dateTime={props.time}>{new Date(props.time).toLocaleString()}</time>
 }

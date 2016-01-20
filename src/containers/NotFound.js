@@ -1,5 +1,5 @@
-import React from "react"
+var React = require("react");
 
-export default function() {
+module.exports = function() {
     return <h1>404 not found</h1>
 }

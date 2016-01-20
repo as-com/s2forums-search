@@ -1,5 +1,6 @@
-import React from "react"
-import {Button, Modal} from "react-bootstrap"
+var React = require("react");
+var Button = require("react-bootstrap/lib/Button");
+var Modal = require("react-bootstrap/lib/Modal");
 
 export default class ErrorReporter extends React.Component {
     constructor(props) {

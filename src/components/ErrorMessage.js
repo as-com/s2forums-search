@@ -1,7 +1,7 @@
-import React from "react"
-import {Alert} from "react-bootstrap"
+var React = require("react");
+var Alert = require("react-bootstrap/lib/Alert");
 
-export default function(props) {
+module.exports = function(props) {
     return <div>
         <Alert bsStyle="danger">
             <strong>An error occured: </strong>

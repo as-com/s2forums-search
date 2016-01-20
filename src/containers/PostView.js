@@ -1,8 +1,8 @@
-import React from "react"
-import Post from "../components/Post"
-import {PageHeader} from "react-bootstrap"
-import Spinner from "../components/Spinner.js"
-import ErrorMessage from "../components/ErrorMessage"
+var React = require("react");
+var Post = require("../components/Post");
+var PageHeader = require("react-bootstrap/lib/PageHeader");
+var Spinner = require("../components/Spinner.js");
+var ErrorMessage = require("../components/ErrorMessage");
 
 if (__CLIENT__) {
     var scratchblocks2 = require("../lib/scratchblocks");
@@ -11,7 +11,7 @@ if (__CLIENT__) {
 
 require("../css/scratchblocks.css");
 
-export default class PostView extends React.Component {
+module.exports = class PostView extends React.Component {
     loadPost() {
         ajax({
             type: "GET",

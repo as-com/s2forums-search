@@ -1,10 +1,12 @@
-import React from "react"
-import {Panel, Col, Row} from "react-bootstrap"
-import SearchTiming from "./SearchTiming"
-import SearchResult from "./SearchResult"
-import SearchPagination from "./SearchPagination"
-import SearchSorting from "./SearchSorting"
-import DocumentTitle from "react-document-title"
+var React = require("react");
+var Panel = require("react-bootstrap/lib/Panel");
+var Col = require("react-bootstrap/lib/Col");
+var Row = require("react-bootstrap/lib/Row");
+var SearchTiming = require("./SearchTiming");
+var SearchResult = require("./SearchResult");
+var SearchPagination = require("./SearchPagination");
+var SearchSorting = require("./SearchSorting");
+var DocumentTitle = require("react-document-title");
 
 export default function(props) {
     var resultNodes = props.res.response.hits.hits.map(function(result) {

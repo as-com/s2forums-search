@@ -1,8 +1,8 @@
-import React from "react"
-import ReactDOM from "react-dom"
-import {Router} from "react-router"
-import routesContainer from "containers/routes"
-import {createHistory} from "history"
+var React = require("react");
+var ReactDOM = require("react-dom");
+var Router = require("react-router/lib/Router");
+var routesContainer = require("containers/routes");
+var createHistory = require("history/lib/createHistory");
 
 /**
  * Fire-up React Router.

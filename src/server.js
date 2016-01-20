@@ -1,23 +1,24 @@
-import babelPolyfill from "babel-polyfill"
-import express from "express"
-import http from "http"
-import bodyParser from "body-parser"
-import socketClusterServer from "socketcluster-server"
-import fs from "fs"
-import path from "path"
+var bablePolyfill = require("babel-polyfill");
+var express = require("express");
+var http = require("http");
+var bodyParser = require("body-parser");
+var socketClusterServer = require("socketcluster-server");
+var fs = require("fs");
+var path = require("path");
 
-import React from "react"
-import {renderToString} from "react-dom/server"
-import {RoutingContext, match} from "react-router"
-import {createLocation} from "history"
-import elasticsearch from "elasticsearch"
-import moment from "moment-timezone"
-import memwatch from "memwatch-next"
-import cacheResponseDirective from "express-cache-response-directive"
-import DocumentTitle from "react-document-title"
-import escapeHTML from "lib/escapeHTML"
+var React = require("react");
+var ReactDOM = require("react-dom/server");
+var RoutingContext = require("react-router/lib/RoutingContext");
+var match = require("react-router/lib/match");
+var createLocation = require("history/lib/createLocation");
+var elasticsearch = require("elasticsearch");
+var moment = require("moment-timezone");
+var memwatch = require("memwatch-next");
+var cacheResponseDirective = require("express-cache-response-directive");
+var DocumentTitle = require("react-document-title");
+var escapeHTML = require("./lib/escapeHTML");
 
-import routesContainer from "containers/routes"
+var routesContainer = require("./containers/routes");
 
 memwatch.on('leak', function(info) {
 	console.warn("Memory leak detected: " + info);
@@ -285,7 +286,7 @@ app.get("*", function(req, res) {
 			return;
 		}
 
-		let reactString = renderToString(<RoutingContext {...renderProps} />);
+		let reactString = ReactDOM.renderToString(<RoutingContext {...renderProps} />);
 		res.send(`<!DOCTYPE html>
 <html>
 	<head>

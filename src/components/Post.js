@@ -1,13 +1,15 @@
-import React from "react"
-import {PageHeader, ListGroup, Button} from "react-bootstrap"
-import DocumentTitle from "react-document-title"
-import TopicLink from "./TopicLink"
-import UserLink from "./UserLink"
-import UserAvatar from "./UserAvatar"
-import Revision from "./Revision"
-import PostTime from "./PostTime"
-import Icon from "./Icon"
-import sanitizeHTML from "../lib/sanitizeHTML"
+var React = require("react");
+var PageHeader = require("react-bootstrap/lib/PageHeader");
+var ListGroup = require("react-bootstrap/lib/ListGroup");
+var Button = require("react-bootstrap/lib/Button");
+var DocumentTitle = require("react-document-title");
+var TopicLink = require("./TopicLink");
+var UserLink = require("./UserLink");
+var UserAvatar = require("./UserAvatar");
+var Revision = require("./Revision");
+var PostTime = require("./PostTime");
+var Icon = require("./Icon");
+var sanitizeHTML = require("../lib/sanitizeHTML");
 
 require("../css/bbcode.css");
 require("../css/pygments.css");
@@ -18,7 +20,7 @@ function createDangerousMarkup(text) {
     }
 }
 
-export default function(props) {
+module.exports = function(props) {
     var revisionNodes = props.data._source.revisions.map(function(revision, index) {
           return <Revision key={index} revId={index} author={revision.author} time={revision.time} id={props.id}><div dangerouslySetInnerHTML={createDangerousMarkup(sanitizeHTML(revision.html) || "<p class='text-muted'>Post empty</p>")}></div></Revision>
         });

@@ -1,10 +1,11 @@
-import React from "react"
-import UserLink from "./UserLink"
-import PostTime from "./PostTime"
-import {ListGroupItem, Button} from "react-bootstrap"
-import ViewSource from "./ViewSource"
+var React = require("react");
+var UserLink = require("./UserLink");
+var PostTime = require("./PostTime");
+var ListGroupItem = require("react-bootstrap/lib/ListGroupItem");
+var Button = require("react-bootstrap/lib/Button");
+var ViewSource = require("./ViewSource");
 
-export default function(props) {
+module.exports = function(props) {
     return <div>
         <hr />
         <h3>Revision by <UserLink username={props.author} /> on <PostTime time={props.time} /></h3>

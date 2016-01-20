@@ -1,9 +1,9 @@
-import React from "react"
-import {PageHeader} from "react-bootstrap"
-import Form from "../components/Form"
-import PostCount from "../components/PostCount"
+var React = require("react");
+var PageHeader = require("react-bootstrap/lib/PageHeader");
+var Form = require("../components/Form");
+var PostCount = require("../components/PostCount");
 
-export default function() {
+module.exports = function() {
     return <div>
         <PageHeader>
         Search <PostCount volatile={true} /> posts on the Scratch forums

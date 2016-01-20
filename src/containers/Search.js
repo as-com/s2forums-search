@@ -1,14 +1,14 @@
-import React from "react"
-import SearchResults from "../components/SearchResults"
-import ErrorMessage from "../components/ErrorMessage"
-import Form from "../components/Form"
-import {PageHeader} from "react-bootstrap"
-import Spinner from "../components/Spinner.js"
+var React = require("react");
+var SearchResults = require("../components/SearchResults");
+var ErrorMessage = require("../components/ErrorMessage");
+var Form = require("../components/Form");
+var PageHeader = require("react-bootstrap/lib/PageHeader");
+var Spinner = require("../components/Spinner.js");
 
 if (__CLIENT__)
     var ajax = require("../lib/psAjax");
 
-export default class Search extends React.Component {
+module.exports = class Search extends React.Component {
     loadSearchResults() {
         var requestData = {
             q: this.props.location.query.q,
