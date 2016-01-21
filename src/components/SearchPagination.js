@@ -2,7 +2,7 @@ var React = require("react");
 var Pagination = require("react-bootstrap/lib/Pagination");
 var History = require("react-router/lib/History");
 
-module.export = React.createClass({
+module.exports = React.createClass({
     mixins: [History],
     handleSelect: function(e, selected) {
         this.history.pushState(this.state, "/search", {
