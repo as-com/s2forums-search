@@ -8,7 +8,7 @@ var SearchPagination = require("./SearchPagination");
 var SearchSorting = require("./SearchSorting");
 var DocumentTitle = require("react-document-title");
 
-export default function(props) {
+module.exports = function(props) {
     var resultNodes = props.res.response.hits.hits.map(function(result) {
         return (
             <SearchResult

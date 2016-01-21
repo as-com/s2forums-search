@@ -8,7 +8,7 @@ var Spinner = require("../components/Spinner.js");
 if (__CLIENT__)
     var ajax = require("../lib/psAjax");
 
-export default class Live extends React.Component {
+module.exports = class Live extends React.Component {
     constructor(props) {
         super(props);
         this.state = {

@@ -1,7 +1,7 @@
 var React = require("react");
 var Icon = require("./Icon");
 
-export default function() {
+module.exports = function() {
     return <footer className="footer">
         <hr />
         <div className="container">
