@@ -2,13 +2,13 @@ var React = require("react");
 var ReactDOM = require("react-dom");
 var Router = require("react-router/lib/Router");
 var routesContainer = require("containers/routes");
-var createHistory = require("history/lib/createHistory");
+var createBrowserHistory = require("history/lib/createBrowserHistory");
 
 /**
  * Fire-up React Router.
  */
 const reactRoot = window.document.getElementById("react-root");
-ReactDOM.render(<Router history={createHistory()}>{routesContainer}</Router>, reactRoot);
+ReactDOM.render(<Router history={createBrowserHistory()}>{routesContainer}</Router>, reactRoot);
 
 /**
  * Detect whether the server-side render has been discarded due to an invalid checksum.
