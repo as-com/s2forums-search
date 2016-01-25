@@ -19,7 +19,7 @@ module.exports = {
 		path: path.join(__dirname, "../static/dist"),
 		filename: "client.[hash].js",
 		publicPath: "/dist/",
-		chunkFilename: "[name].[id].[hash].js",
+		chunkFilename: "chunk.[name].[chunkhash].js",
 	},
 	plugins: [
 		new webpack.DefinePlugin({
@@ -43,7 +43,7 @@ module.exports = {
 			},
 			output: {
 				screw_ie8: true,
-				preamble: "//! Scratch Forums Search v0.6.6-beta | (c) Andrew Sun | https://github.com/as-com/s2forums-search"
+				preamble: "//! Scratch Forums Search v0.6.7-beta | (c) Andrew Sun | https://github.com/as-com/s2forums-search"
 			}
 		}),
 		new ExtractTextPlugin("client.[contenthash].css"),
@@ -79,7 +79,7 @@ module.exports = {
 			"node_modules",
 			"web_modules"
 		],
-		extensions: ["", ".json", ".js"]
+		extensions: ["", ".json", ".js", ".jsx"]
 	},
 	node: {
 		__dirname: true,

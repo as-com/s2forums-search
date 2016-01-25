@@ -18,7 +18,7 @@ var cacheResponseDirective = require("express-cache-response-directive");
 var DocumentTitle = require("react-document-title");
 var escapeHTML = require("./lib/escapeHTML");
 
-var routesContainer = require("./containers/routes");
+var routes = require("./routes/MainRoute");
 
 memwatch.on('leak', function(info) {
 	console.warn("Memory leak detected: " + info);
@@ -35,7 +35,6 @@ var app = express();
 const hostname = process.env.HOSTNAME || "localhost";
 const port = process.env.PORT || 8000;
 
-let routes = routesContainer;
 var server = http.createServer(app);
 var scServer = socketClusterServer.attach(server);
 
@@ -269,10 +268,16 @@ app.get("/api/lastLive", function(req, res) {
 });
 
 var assetURLs = JSON.parse(fs.readFileSync("dist/webpack-assets.json"));
+if (__DEV__) {
+	setInterval(function() {
+		assetURLs = JSON.parse(fs.readFileSync("dist/webpack-assets.json"));
+	}, 1000);
+}
 
 app.get("*", function(req, res) {
 	const location = createLocation(req.path);
 	const webserver = __PRODUCTION__ ? "" : `//${hostname}:8080`;
+	global.chunks = ["main"];
 	match({
 		routes, location: req.url
 	}, (error, redirectLocation, renderProps) => {
@@ -285,8 +290,10 @@ app.get("*", function(req, res) {
 			res.status(404).send("404 not found");
 			return;
 		}
-
 		let reactString = ReactDOM.renderToString(<RoutingContext {...renderProps} />);
+		let scriptTags = global.chunks.map((element) => {
+			return `<script src="${assetURLs[element].js}" ${element == "main" ? "" : "defer"}></script>`;
+		}).join("");
 		res.send(`<!DOCTYPE html>
 <html>
 	<head>
@@ -300,7 +307,7 @@ app.get("*", function(req, res) {
 <body>
 	<div id="react-root">${reactString}</div>
 	<script>var currentPostCount = ${JSON.stringify(global.getDocCount())}</script>
-	<script src="${assetURLs.main.js}"></script>
+	${scriptTags}
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -328,8 +335,8 @@ server.listen(port, () => {
 if (__DEV__) {
 	if (module.hot) {
 		console.log("[HMR] Waiting for server-side updates");
-		module.hot.accept("containers/routes", () => {
-			routes = require("containers/routes");
+		module.hot.accept("routes/MainRoute", () => {
+			routes = require("routes/MainRoute");
 		});
 		module.hot.addStatusHandler((status) => {
 				if (status === "abort") {
