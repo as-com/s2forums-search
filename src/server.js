@@ -277,7 +277,6 @@ if (__DEV__) {
 app.get("*", function(req, res) {
 	const location = createLocation(req.path);
 	const webserver = __PRODUCTION__ ? "" : `//${hostname}:8080`;
-	global.chunks = ["main"];
 	match({
 		routes, location: req.url
 	}, (error, redirectLocation, renderProps) => {
@@ -291,9 +290,6 @@ app.get("*", function(req, res) {
 			return;
 		}
 		let reactString = ReactDOM.renderToString(<RoutingContext {...renderProps} />);
-		let scriptTags = global.chunks.map((element) => {
-			return `<script src="${assetURLs[element].js}"></script>`;
-		}).join("");
 		res.send(`<!DOCTYPE html>
 <html>
 	<head>
@@ -307,7 +303,7 @@ app.get("*", function(req, res) {
 <body>
 	<div id="react-root">${reactString}</div>
 	<script>var currentPostCount = ${JSON.stringify(global.getDocCount())}</script>
-	${scriptTags}
+	<script src="${assetURLs.main.js}"></script>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

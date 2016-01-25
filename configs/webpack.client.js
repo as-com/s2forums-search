@@ -19,7 +19,7 @@ module.exports = {
 		path: path.join(__dirname, "../static/dist"),
 		filename: "client.[hash].js",
 		publicPath: "/dist/",
-		chunkFilename: "chunk.[name].[chunkhash].js",
+		chunkFilename: "chunk.[id].[chunkhash].js",
 	},
 	plugins: [
 		new webpack.DefinePlugin({
@@ -35,6 +35,7 @@ module.exports = {
 		}),
 		new webpack.optimize.DedupePlugin(),
 		new webpack.optimize.OccurenceOrderPlugin(),
+		new webpack.optimize.AggressiveMergingPlugin(),
 		new webpack.optimize.UglifyJsPlugin({
 			compress: {
 				unsafe: true,
@@ -55,13 +56,13 @@ module.exports = {
 			loaders: ["json"]
 		}, {
 			test: /\.css$/,
-			loader: ExtractTextPlugin.extract("style-loader", "css-loader?sourceMap!postcss-loader")
+			loader: ExtractTextPlugin.extract("style-loader", "css-loader!postcss-loader")
 		}, {
 			test: /\.less$/,
-			loader: ExtractTextPlugin.extract("style-loader", "css-loader!postcss-loader!less-loader?sourceMap")
+			loader: ExtractTextPlugin.extract("style-loader", "css-loader!postcss-loader!less-loader")
 		}, {
 			test: /\.scss$/,
-			loader: ExtractTextPlugin.extract("style-loader", "css-loader!postcss-loader!sass-loader?sourceMap")
+			loader: ExtractTextPlugin.extract("style-loader", "css-loader!postcss-loader!sass-loader")
 		}, {
 			test: /\.(png|woff|woff2|eot|ttf|svg)$/,
 			loader: 'file-loader'
