@@ -292,7 +292,7 @@ app.get("*", function(req, res) {
 		}
 		let reactString = ReactDOM.renderToString(<RoutingContext {...renderProps} />);
 		let scriptTags = global.chunks.map((element) => {
-			return `<script src="${assetURLs[element].js}" ${element == "main" ? "" : "defer"}></script>`;
+			return `<script src="${assetURLs[element].js}"></script>`;
 		}).join("");
 		res.send(`<!DOCTYPE html>
 <html>
