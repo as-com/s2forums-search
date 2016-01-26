@@ -307,6 +307,7 @@ app.get("*", function(req, res) {
 		var _paq = _paq || [];
 		//   _paq.push(['trackPageView']);
 		_paq.push(['enableLinkTracking']);
+		_paq.push(['enableHeartBeatTimer']);
 		(function() {
 			var u="//utils.asun.co/snoopy/";
 			_paq.push(['setTrackerUrl', u+'snoopy.php']);

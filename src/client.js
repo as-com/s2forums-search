@@ -11,7 +11,8 @@ const location = `${pathname}${search}${hash}`;
 var history = createBrowserHistory();
 
 if (__PRODUCTION__) {
-    history.listen(function() {
+    history.listen(function(location) {
+        _paq.push(['setCustomUrl', location.pathname]);
         _paq.push(['trackPageView']);
     });
 }
