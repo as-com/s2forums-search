@@ -297,12 +297,13 @@ app.get("*", function(req, res) {
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>${DocumentTitle.rewind()}</title>
 	<link rel="shortcut icon" href="/favicon.ico" />
-	<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/cerulean/bootstrap.min.css" rel="stylesheet" integrity="sha256-Ucf/ylcKTNevYP6l7VNUhGLDRZPQs1+LsbbxuzMxUJM= sha512-FW2XqnqMwERwg0LplG7D64h8zA1BsxvxrDseWpHLq8Dg8kOBmLs19XNa9oAajN/ToJRRklfDJ398sOU+7LcjZA==" crossorigin="anonymous" />
 	<link href="${assetURLs.main.css}" rel="stylesheet" />
 </head>
 <body>
 	<div id="react-root">${reactString}</div>
 	<script>var currentPostCount = ${JSON.stringify(global.getDocCount())}</script>
+	<script src="https://cdn.jsdelivr.net/zepto/1.1.6/zepto.min.js"></script>
+	<script>jQuery = Zepto;</script>
 	<script src="${assetURLs.main.js}"></script>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

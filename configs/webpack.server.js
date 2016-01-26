@@ -49,6 +49,9 @@ module.exports = {
 		}, {
 			test: /\.scss$/,
 			loader: "null-loader"
+		}, {
+			test: /semantic-ui-less/,
+			loader: "null-loader"
 		}],
 		postLoaders: [{
 			test: /\.js$/,

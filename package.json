@@ -38,6 +38,8 @@
     "react-dom": "^0.14.6",
     "react-router": "^1.0.3",
     "react-router-bootstrap": "^0.19.3",
+    "script-loader": "^0.6.1",
+    "semantic-ui-less": "^2.1.8",
     "socketcluster-client": "^4.1.0",
     "socketcluster-server": "^4.1.1",
     "style-loader": "^0.13.0"
