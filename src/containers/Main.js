@@ -9,10 +9,12 @@ require("../css/main.scss");
 require("semantic-ui-less/definitions/globals/reset.less");
 require("semantic-ui-less/definitions/globals/site.less");
 require("semantic-ui-less/definitions/globals/site");
+require("semantic-ui-less/definitions/collections/grid.less");
+require("semantic-ui-less/definitions/elements/container.less");
 
 module.exports = function(props) {
 	return <DocumentTitle title='Scratch Forums Search'>
-		<div>
+		<div className="ui grid container">
 			<ErrorReporter />
 			<Header />
 			<div className="container">

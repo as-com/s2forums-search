@@ -302,8 +302,7 @@ app.get("*", function(req, res) {
 <body>
 	<div id="react-root">${reactString}</div>
 	<script>var currentPostCount = ${JSON.stringify(global.getDocCount())}</script>
-	<script src="https://cdn.jsdelivr.net/zepto/1.1.6/zepto.min.js"></script>
-	<script>jQuery = Zepto;</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<script src="${assetURLs.main.js}"></script>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
