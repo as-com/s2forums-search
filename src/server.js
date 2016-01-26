@@ -303,7 +303,6 @@ app.get("*", function(req, res) {
 <body>
 	<div id="react-root">${reactString}</div>
 	<script>var currentPostCount = ${JSON.stringify(global.getDocCount())}</script>
-	<script src="${assetURLs.main.js}"></script>
 	<script type="text/javascript">
 		var _paq = _paq || [];
 		//   _paq.push(['trackPageView']);
@@ -316,6 +315,7 @@ app.get("*", function(req, res) {
 			g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'snoopy.js'; s.parentNode.insertBefore(g,s);
 		})();
 	</script>
+	<script src="${assetURLs.main.js}"></script>
 	<noscript><p><img src="//utils.asun.co/snoopy/snoopy.php?idsite=11" style="border:0;" alt="" /></p></noscript>
 </body>
 </html>`);
