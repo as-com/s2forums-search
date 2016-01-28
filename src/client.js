@@ -12,7 +12,7 @@ var history = createBrowserHistory();
 
 if (__PRODUCTION__) {
     history.listen(function(location) {
-        _paq.push(['setCustomUrl', location.pathname]);
+        _paq.push(['setCustomUrl', location.pathname + location.search]);
         _paq.push(['trackPageView']);
     });
 }
