@@ -32,3 +32,5 @@ node_modules/
 *.map
 cde-package/
 cde-package.tar.gz
+
+newrelic.js

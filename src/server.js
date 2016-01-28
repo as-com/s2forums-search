@@ -1,3 +1,4 @@
+require('newrelic');
 var bablePolyfill = require("babel-polyfill");
 var express = require("express");
 var http = require("http");
